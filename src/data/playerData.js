@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa6'
 
 // ── Imágenes del jugador ──────────────────────────────
-import playerImg from '../assets/gonza1.png'
+import playerImg from '../assets/perfil1.webp'
 
 // ── Galería ───────────────────────────────────────────
 import g1 from '../assets/gallery/050A0211.webp'
@@ -19,25 +19,27 @@ import g3 from '../assets/gallery/1V3A4852.jpg'
 import g4 from '../assets/gallery/1V3A5808.webp'
 import g5 from '../assets/gallery/1V6A5944.webp'
 
+// ── Logos de clubes ───────────────────────────────────
+import platense from '../assets/escudo_platense.webp'
 // ── Videos ────────────────────────────────────────────
 import heroVideo from '../assets/videos/Diseño sin título (1).mp4'
 
 export const playerData = {
   name: 'GUIDO MAINERO',
   fullName: 'Guido Mainero',
-  number: 10,
+  number: 7,
   position: 'Mediocampista Ofensivo',
   positionShort: 'MCO',
   nationality: 'Argentina',
   nationalityFlag: '🇦🇷',
   age: 24,
-  height: '1,74 m',
+  height: '1,77 m',
   weight: '70 kg',
-  foot: 'Derecho',
-  birthDate: '12 de Marzo, 2002',
-  birthPlace: 'Rosario, Argentina',
-  currentClub: 'Club Atlético',
-  logoCurrentClub: '',
+  foot: 'Izquierdo  ',
+  birthDate: '23 de Marzo, 1995',
+  birthPlace: 'Córdoba, Argentina',
+  currentClub: 'Club Atlético Platense',
+  logoCurrentClub: platense,
   image: playerImg,
 
   // Barras técnicas (0-100)

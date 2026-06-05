@@ -95,15 +95,7 @@ body {
 
 /* ── Decorative grid ───────────────────────── */
 .deco-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.013) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.013) 1px, transparent 1px);
-  background-size: 80px 80px;
+  display: none;
 }
 
 /* ── Gradient text ─────────────────────────── */
