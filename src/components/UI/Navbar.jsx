@@ -1,190 +1,215 @@
-import { useState, useEffect, useRef } from 'react'
-import { Box, Flex, Text, Button, IconButton, VStack } from '@chakra-ui/react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { FiMenu, FiX } from 'react-icons/fi'
+import { useEffect, useRef, useState } from 'react'
+import { Box, Flex, Text, HStack, VStack } from '@chakra-ui/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+
+gsap.registerPlugin(ScrollTrigger)
 
 const MotionBox = motion(Box)
 
-const LINKS = [
-  { label: 'Inicio', id: 'hero' },
-  { label: 'Perfil', id: 'stats' },
-  { label: 'Videos', id: 'videos' },
-  { label: 'Galería', id: 'gallery' },
-  { label: 'Prensa', id: 'press' },
-  { label: 'Contacto', id: 'contact' },
+const navLinks = [
+  { label: 'Stats',    href: '#stats' },
+  { label: 'Videos',   href: '#videos' },
+  { label: 'Fotos',    href: '#gallery' },
+  { label: 'Prensa',   href: '#press' },
+  { label: 'Contacto', href: '#contact' },
 ]
 
-function scrollToId(id) {
-  const el = document.getElementById(id)
-  if (!el) return
-  if (window.__lenis) {
-    window.__lenis.scrollTo(el, { offset: -10, duration: 1.4 })
-  } else {
-    el.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
-export function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+export default function Navbar() {
   const navRef = useRef(null)
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const handleScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
-    if (!navRef.current) return
-    gsap.fromTo(
-      navRef.current,
+    gsap.fromTo(navRef.current,
       { y: -60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.9, delay: 0.5, ease: 'power3.out' }
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.5 }
     )
   }, [])
 
-  const go = (id) => {
-    setOpen(false)
-    scrollToId(id)
-  }
+  // Cerrar el menú al pasar a desktop
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 48em)')
+    const onChange = (e) => { if (e.matches) setMenuOpen(false) }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  // Fondo sólido cuando el menú mobile está abierto (mejor legibilidad)
+  const showSolid = scrolled || menuOpen
 
   return (
     <Box
       ref={navRef}
       as="nav"
       position="fixed"
-      top={0}
-      left={0}
-      right={0}
+      top="0"
+      left="0"
+      right="0"
       zIndex={1000}
-      px={{ base: 6, md: 12, lg: 20 }}
-      py={{ base: 4, md: 5 }}
-      transition="background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease"
-      bg={scrolled ? 'rgba(8,12,18,0.85)' : 'transparent'}
-      backdropFilter={scrolled ? 'blur(16px)' : 'none'}
-      borderBottom="1px solid"
-      borderColor={scrolled ? 'rgba(255,255,255,0.06)' : 'transparent'}
+      transition="all 0.4s ease"
+      bg={showSolid ? 'rgba(8, 12, 18, 0.85)' : 'transparent'}
+      backdropFilter={showSolid ? 'blur(16px)' : 'none'}
+      borderBottom={showSolid ? '1px solid rgba(110, 76, 52, 0.62)' : 'none'}
     >
-      <Flex align="center" justify="space-between">
+      <Flex
+        align="center"
+        justify="space-between"
+        px={{ base: 6, md: 12, lg: 20 }}
+        py={4}
+      >
         {/* Logo */}
-        <Text
-          fontFamily="heading"
-          fontSize={{ base: '2xl', md: '3xl' }}
-          letterSpacing="0.05em"
-          lineHeight={1}
-          cursor="pointer"
-          onClick={() => go('hero')}
-          userSelect="none"
-        >
-          GM
-          <Box as="span" color="brand.brown">
-            _
-          </Box>
-        </Text>
+        <Box as="a" href="#hero" style={{ textDecoration: 'none' }} onClick={() => setMenuOpen(false)}>
+          <Text
+            fontFamily="'Bebas Neue', sans-serif"
+            fontSize="28px"
+            letterSpacing="0.08em"
+            color="white"
+            lineHeight="1"
+            cursor="pointer"
+          >
+            GM
+            <Box as="span" color="brand.brown" ml="1px">_</Box>
+          </Text>
+        </Box>
 
-        {/* Links desktop */}
-        <Flex
-          display={{ base: 'none', md: 'flex' }}
-          align="center"
-          gap={8}
-        >
-          {LINKS.map((l) => (
-            <Box
-              key={l.id}
-              as="button"
-              onClick={() => go(l.id)}
-              fontFamily="condensed"
-              fontSize="sm"
-              fontWeight={500}
-              letterSpacing="0.14em"
-              textTransform="uppercase"
-              color="whiteAlpha.800"
-              position="relative"
-              transition="color 0.25s ease"
-              _hover={{ color: 'white' }}
-              sx={{
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  left: 0,
-                  bottom: '-6px',
-                  width: '0%',
-                  height: '1px',
-                  bg: 'brand.brown',
-                  transition: 'width 0.3s ease',
-                },
-                '&:hover::after': { width: '100%' },
-              }}
-            >
-              {l.label}
-            </Box>
+        {/* Nav links — desktop */}
+        <HStack spacing={8} display={{ base: 'none', md: 'flex' }}>
+          {navLinks.slice(0, 4).map((link) => (
+            <NavAnchor key={link.label} href={link.href}>
+              {link.label}
+            </NavAnchor>
           ))}
-          <Button variant="pioviSolid" size="sm" onClick={() => go('contact')}>
-            Contratar
-          </Button>
-        </Flex>
+        </HStack>
 
-        {/* Hamburguesa mobile */}
-        <IconButton
-          display={{ base: 'flex', md: 'none' }}
-          aria-label="Menú"
-          icon={open ? <FiX size={22} /> : <FiMenu size={22} />}
-          onClick={() => setOpen((v) => !v)}
-          variant="ghost"
+        {/* CTA — desktop */}
+        <Box
+          as="a"
+          href="#contact"
+          fontFamily="'Barlow Condensed', sans-serif"
+          fontWeight="600"
+          fontSize="12px"
+          letterSpacing="0.16em"
+          textTransform="uppercase"
+          px={5}
+          py={2}
+          border="1px solid"
+          borderColor="brand.brown"
           color="white"
-          _hover={{ bg: 'whiteAlpha.100' }}
-          borderRadius={0}
-        />
+          display={{ base: 'none', md: 'block' }}
+          _hover={{ bg: 'brand.brown', color: 'white' }}
+          transition="all 0.3s ease"
+        >
+          Contacto
+        </Box>
+
+        {/* Hamburguesa — mobile */}
+        <Box
+          display={{ base: 'flex', md: 'none' }}
+          as="button"
+          aria-label="Abrir menú"
+          onClick={() => setMenuOpen((v) => !v)}
+          flexDirection="column"
+          justifyContent="center"
+          gap="5px"
+          w="34px"
+          h="34px"
+          alignItems="flex-end"
+        >
+          <Box
+            as="span"
+            w="26px"
+            h="2px"
+            bg="white"
+            transition="transform 0.3s ease, width 0.3s ease"
+            transform={menuOpen ? 'translateY(7px) rotate(45deg)' : 'none'}
+          />
+          <Box
+            as="span"
+            w="18px"
+            h="2px"
+            bg={menuOpen ? 'transparent' : 'brand.brown'}
+            transition="opacity 0.2s ease, width 0.3s ease"
+            opacity={menuOpen ? 0 : 1}
+          />
+          <Box
+            as="span"
+            w="26px"
+            h="2px"
+            bg="white"
+            transition="transform 0.3s ease"
+            transform={menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none'}
+          />
+        </Box>
       </Flex>
 
-      {/* Menú mobile */}
+      {/* Menú desplegable — mobile */}
       <AnimatePresence>
-        {open && (
+        {menuOpen && (
           <MotionBox
             display={{ base: 'block', md: 'none' }}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
             overflow="hidden"
-            mt={4}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            borderTop="1px solid rgba(255,255,255,0.06)"
           >
             <VStack
               align="stretch"
               spacing={0}
-              borderTop="1px solid"
-              borderColor="whiteAlpha.100"
-              pt={4}
+              px={6}
+              py={4}
+              divider={<Box h="1px" bg="rgba(255,255,255,0.05)" />}
             >
-              {LINKS.map((l) => (
-                <Box
-                  key={l.id}
-                  as="button"
-                  textAlign="left"
-                  py={3}
-                  onClick={() => go(l.id)}
-                  fontFamily="condensed"
-                  fontSize="lg"
-                  letterSpacing="0.12em"
-                  textTransform="uppercase"
-                  color="whiteAlpha.800"
-                  borderBottom="1px solid"
-                  borderColor="whiteAlpha.50"
-                  _active={{ color: 'brand.brown' }}
+              {navLinks.map((link, i) => (
+                <MotionBox
+                  key={link.label}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.08 + i * 0.06, duration: 0.3 }}
                 >
-                  {l.label}
-                </Box>
+                  <Flex
+                    as="a"
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    align="center"
+                    gap={4}
+                    py={3}
+                    role="group"
+                  >
+                    <Text
+                      fontFamily="'Barlow Condensed', sans-serif"
+                      fontSize="11px"
+                      fontWeight="700"
+                      letterSpacing="0.2em"
+                      color="brand.brown"
+                      w="22px"
+                    >
+                      0{i + 1}
+                    </Text>
+                    <Text
+                      fontFamily="'Bebas Neue', sans-serif"
+                      fontSize="28px"
+                      letterSpacing="0.04em"
+                      color="whiteAlpha.800"
+                      lineHeight="1"
+                      transition="color 0.2s ease, transform 0.2s ease"
+                      _groupHover={{ color: 'white', transform: 'translateX(4px)' }}
+                    >
+                      {link.label}
+                    </Text>
+                  </Flex>
+                </MotionBox>
               ))}
-              <Button
-                variant="pioviSolid"
-                mt={4}
-                onClick={() => go('contact')}
-              >
-                Contratar
-              </Button>
             </VStack>
           </MotionBox>
         )}
@@ -193,4 +218,36 @@ export function Navbar() {
   )
 }
 
-export default Navbar
+// ─── Link inline de desktop (con subrayado animado) ──────────────
+function NavAnchor({ href, children }) {
+  return (
+    <Box
+      as="a"
+      href={href}
+      fontFamily="'Barlow Condensed', sans-serif"
+      fontWeight="600"
+      fontSize="13px"
+      letterSpacing="0.14em"
+      textTransform="uppercase"
+      color="whiteAlpha.700"
+      position="relative"
+      _hover={{ color: 'white' }}
+      transition="color 0.2s"
+      sx={{
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '-2px',
+          left: 0,
+          width: '0%',
+          height: '1px',
+          background: 'brand.brown',
+          transition: 'width 0.3s ease',
+        },
+        '&:hover::after': { width: '100%' },
+      }}
+    >
+      {children}
+    </Box>
+  )
+}

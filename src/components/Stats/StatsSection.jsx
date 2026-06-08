@@ -1,13 +1,16 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import {
   Box,
   Flex,
   Grid,
   GridItem,
   Text,
+  Image,
   SimpleGrid,
   VStack,
+  IconButton,
 } from '@chakra-ui/react'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -42,7 +45,7 @@ function StatBar({ label, value }) {
           scrollTrigger: {
             trigger: el,
             start: 'top 90%',
-            end: 'top 55%',
+            end: 'top 100%',
             scrub: 0.6,
           },
         }
@@ -57,7 +60,7 @@ function StatBar({ label, value }) {
           scrollTrigger: {
             trigger: el,
             start: 'top 90%',
-            end: 'top 55%',
+            end: 'top 100%',
             scrub: 0.6,
           },
         }
@@ -124,8 +127,9 @@ function SeasonCard({ label, value }) {
       p={{ base: 4, md: 5 }}
       transition="all 0.3s ease"
       _hover={{
-        transform: 'translateY(-3px)',
+        transform: 'translateY(-3px)!important',
         borderColor: 'rgba(156,117,90,0.5)',
+        
       }}
     >
       <Text fontFamily="heading" fontSize={{ base: '4xl', md: '5xl' }} lineHeight={1}>
@@ -145,25 +149,188 @@ function SeasonCard({ label, value }) {
   )
 }
 
+function ClubCard({ club, isFirst, isLast }) {
+  return (
+    <Box
+      data-club-card
+      flex="0 0 auto"
+      w={{ base: '230px', md: '264px' }}
+      position="relative"
+      sx={{ scrollSnapAlign: 'center' }}
+    >
+      {/* ── Línea de tiempo (continua, atraviesa los escudos) ── */}
+      {/* -12px = mitad del gap entre cards, para empalmar con la vecina */}
+      <Box
+        position="absolute"
+        top={{ base: '32px', md: '36px' }}
+        left={isFirst ? '50%' : '-12px'}
+        right={isLast ? '50%' : '-12px'}
+        h="1px"
+        bgGradient="linear(to-r, brand.brownDark, brand.brown, brand.brownDark)"
+        opacity={0.55}
+      />
+
+      {/* ── Escudo = nodo de la trayectoria ── */}
+      <Flex justify="center" mb={5} position="relative" zIndex={1}>
+        <Flex
+          align="center"
+          justify="center"
+          w={{ base: '64px', md: '72px' }}
+          h={{ base: '64px', md: '72px' }}
+          borderRadius="full"
+          bg="#0A0E16"
+          border="1px solid"
+          borderColor="rgba(156,117,90,0.45)"
+          boxShadow="0 0 0 6px #0A0E16, 0 6px 16px rgba(0,0,0,0.5)"
+          transition="box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease"
+          sx={{
+            '[data-club-card]:hover &': {
+              borderColor: 'brand.brown',
+              boxShadow:
+                '0 0 0 6px #0A0E16, 0 0 0 1px rgba(156,117,90,0.5), 0 0 14px 2px rgba(156,117,90,0.30)',
+              transform: 'translateY(-2px)',
+            },
+          }}
+        >
+          {club.escudo ? (
+            <Image
+              src={club.escudo}
+              alt={club.name}
+              w={{ base: '38px', md: '44px' }}
+              h={{ base: '38px', md: '44px' }}
+              objectFit="contain"
+              draggable={false}
+            />
+          ) : (
+            <Box w="11px" h="11px" borderRadius="full" bg="brand.brown" />
+          )}
+        </Flex>
+      </Flex>
+
+      {/* ── Card de info encuadrada ── */}
+      <Box
+        mx={{ base: 2, md: 3 }}
+        p={{ base: 4, md: 5 }}
+        bg="rgba(255,255,255,0.02)"
+        border="1px solid"
+        borderColor="whiteAlpha.100"
+        borderRadius="10px"
+        transition="all 0.35s ease"
+        textAlign="center"
+        _hover={{
+          borderColor: 'rgba(156,117,90,0.5)',
+          bg: 'rgba(156,117,90,0.04)',
+        }}
+      >
+        <Text
+          fontFamily="condensed"
+          fontSize="10px"
+          letterSpacing="0.2em"
+          textTransform="uppercase"
+          color="brand.gold"
+          mb={1}
+        >
+          {club.years}
+        </Text>
+        <Text fontFamily="heading" fontSize="2xl" lineHeight={1.05}>
+          {club.name}
+        </Text>
+        <Text
+          fontFamily="condensed"
+          fontSize="10px"
+          letterSpacing="0.16em"
+          textTransform="uppercase"
+          color="whiteAlpha.600"
+          mt={1}
+        >
+          {club.country}
+        </Text>
+
+        {club.info && (
+          <Text fontFamily="body" fontSize="xs" color="whiteAlpha.700" mt={3}>
+            {club.info}
+          </Text>
+        )}
+
+        {club.titles?.length > 0 && (
+          <>
+            <Box h="1px" bg="whiteAlpha.100" my={4} />
+            <VStack align="stretch" spacing={1.5}>
+              {club.titles.map((t, ti) => (
+                <Flex key={ti} align="center" justify="center" gap={2}>
+                  <Text fontSize="10px" flexShrink={0}>🏆</Text>
+                  <Text
+                    fontFamily="condensed"
+                    fontSize="xs"
+                    letterSpacing="0.08em"
+                    color="whiteAlpha.800"
+                  >
+                    {t}
+                  </Text>
+                </Flex>
+              ))}
+            </VStack>
+          </>
+        )}
+      </Box>
+    </Box>
+  )
+}
+
 function ClubsTimeline() {
   const scrollRef = useRef(null)
+  const [canLeft, setCanLeft] = useState(false)
+  const [canRight, setCanRight] = useState(true)
 
-  // drag-to-scroll
+  // ── Estado de los bordes (habilita/atenúa flechas) ──
+  const updateEdges = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft < max - 4)
+  }, [])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    updateEdges()
+    el.addEventListener('scroll', updateEdges, { passive: true })
+    window.addEventListener('resize', updateEdges)
+    return () => {
+      el.removeEventListener('scroll', updateEdges)
+      window.removeEventListener('resize', updateEdges)
+    }
+  }, [updateEdges])
+
+  // ── Desplazamiento con flechas (una card por click) ──
+  const scrollByCards = (dir) => {
+    const el = scrollRef.current
+    if (!el) return
+    const card = el.querySelector('[data-club-card]')
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.8
+    el.scrollBy({ left: dir * step, behavior: 'smooth' })
+  }
+
+  // ── Drag-to-scroll con mouse (touch es nativo) ──
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
     let isDown = false
     let startX = 0
     let startScroll = 0
+    let moved = false
 
     const down = (e) => {
       isDown = true
+      moved = false
       startX = e.pageX
       startScroll = el.scrollLeft
       el.style.cursor = 'grabbing'
     }
     const move = (e) => {
       if (!isDown) return
+      if (Math.abs(e.pageX - startX) > 3) moved = true
       e.preventDefault()
       el.scrollLeft = startScroll - (e.pageX - startX)
     }
@@ -171,11 +338,20 @@ function ClubsTimeline() {
       isDown = false
       el.style.cursor = 'grab'
     }
+    // evita que un drag dispare clicks accidentales en links internos
+    const click = (e) => {
+      if (moved) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
     el.addEventListener('mousedown', down)
+    el.addEventListener('click', click, true)
     window.addEventListener('mousemove', move)
     window.addEventListener('mouseup', up)
     return () => {
       el.removeEventListener('mousedown', down)
+      el.removeEventListener('click', click, true)
       window.removeEventListener('mousemove', move)
       window.removeEventListener('mouseup', up)
     }
@@ -183,106 +359,72 @@ function ClubsTimeline() {
 
   return (
     <Box mt={{ base: 16, md: 24 }}>
-      <Text
-        fontFamily="condensed"
-        fontSize="11px"
-        letterSpacing="0.36em"
-        textTransform="uppercase"
-        color="brand.brown"
-        mb={8}
-      >
-        Trayectoria
-      </Text>
+      {/* ── Encabezado + flechas de navegación ── */}
+      <Flex justify="space-between" align="center" mb={{ base: 8, md: 10 }}>
+        <Text
+          fontFamily="condensed"
+          fontSize="11px"
+          letterSpacing="0.36em"
+          textTransform="uppercase"
+          color="brand.brown"
+        >
+          Trayectoria
+        </Text>
+
+        <Flex gap={2}>
+          {[
+            { dir: -1, icon: FaChevronLeft, enabled: canLeft, label: 'Anterior' },
+            { dir: 1, icon: FaChevronRight, enabled: canRight, label: 'Siguiente' },
+          ].map(({ dir, icon: Icon, enabled, label }) => (
+            <IconButton
+              key={label}
+              aria-label={label}
+              icon={<Icon size={13} />}
+              onClick={() => scrollByCards(dir)}
+              isDisabled={!enabled}
+              size="sm"
+              variant="unstyled"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              w="38px"
+              h="38px"
+              minW="38px"
+              color="white"
+              bg="rgba(255,255,255,0.02)"
+              border="1px solid"
+              borderColor="whiteAlpha.200"
+              borderRadius="8px"
+              opacity={enabled ? 1 : 0.3}
+              transition="all 0.3s ease"
+              _hover={
+                enabled
+                  ? { bg: 'brand.brown', borderColor: 'brand.brown' }
+                  : {}
+              }
+            />
+          ))}
+        </Flex>
+      </Flex>
+
+      {/* ── Carril con scroll horizontal ── */}
+      {/* py amplio: deja respirar el glow del escudo sin que el overflow lo recorte */}
       <Box
         ref={scrollRef}
         className="no-scrollbar"
         overflowX="auto"
         cursor="grab"
+        mx={{ base: -2, md: -3 }}
         sx={{ scrollSnapType: 'x mandatory' }}
-        pb={4}
       >
-        <Flex gap={0} minW="max-content">
+        <Flex gap={6} minW="max-content" py={5}>
           {playerData.clubs.map((club, i) => (
-            <Box
+            <ClubCard
               key={i}
-              minW={{ base: '260px', md: '320px' }}
-              pr={{ base: 8, md: 12 }}
-              position="relative"
-              sx={{ scrollSnapAlign: 'start' }}
-            >
-              {/* línea conectora */}
-              <Box
-                position="absolute"
-                top="6px"
-                left={0}
-                right={0}
-                h="1px"
-                bg="whiteAlpha.150"
-              />
-              {/* nodo */}
-              <Box
-                position="absolute"
-                top="0"
-                left="0"
-                w="13px"
-                h="13px"
-                borderRadius="full"
-                bg="brand.brown"
-                border="3px solid"
-                borderColor="brand.dark"
-                boxShadow="0 0 0 1px rgba(156,117,90,0.5)"
-              />
-              <Box pt={10}>
-                <Text
-                  fontFamily="condensed"
-                  fontSize="10px"
-                  letterSpacing="0.2em"
-                  textTransform="uppercase"
-                  color="brand.gold"
-                  mb={1}
-                >
-                  {club.years}
-                </Text>
-                <Text fontFamily="heading" fontSize="2xl" lineHeight={1}>
-                  {club.name}
-                </Text>
-                <Text
-                  fontFamily="condensed"
-                  fontSize="11px"
-                  letterSpacing="0.16em"
-                  textTransform="uppercase"
-                  color="whiteAlpha.600"
-                  mt={1}
-                >
-                  {club.country}
-                </Text>
-                {club.info && (
-                  <Text
-                    fontFamily="body"
-                    fontSize="sm"
-                    color="whiteAlpha.700"
-                    mt={3}
-                  >
-                    {club.info}
-                  </Text>
-                )}
-                <VStack align="stretch" spacing={1} mt={4}>
-                  {club.titles.map((t, ti) => (
-                    <Flex key={ti} align="center" gap={2}>
-                      <Box w="4px" h="4px" bg="brand.gold" />
-                      <Text
-                        fontFamily="condensed"
-                        fontSize="xs"
-                        letterSpacing="0.08em"
-                        color="whiteAlpha.800"
-                      >
-                        {t}
-                      </Text>
-                    </Flex>
-                  ))}
-                </VStack>
-              </Box>
-            </Box>
+              club={club}
+              isFirst={i === 0}
+              isLast={i === playerData.clubs.length - 1}
+            />
           ))}
         </Flex>
       </Box>
@@ -292,12 +434,15 @@ function ClubsTimeline() {
 
 export function StatsSection() {
   return (
+    // El desplazamiento −100vh que hace que esta sección suba sobre el
+    // Hero pinneado vive en el wrapper de App.jsx (no aquí), para que el
+    // "cover phase" del Hero (100vh) calce 1:1. Acá solo el look de panel:
+    // fondo sólido, esquinas superiores redondeadas y sombra hacia arriba.
     <Box
       as="section"
       id="stats"
       position="relative"
-      zIndex={21}
-      mt="-100vh"
+      zIndex={20}
       bg="#0A0E16"
       borderTopRadius="22px"
       boxShadow="0 -30px 60px rgba(0,0,0,0.6)"
@@ -307,7 +452,7 @@ export function StatsSection() {
     >
       <Box className="deco-grid" opacity={0.6} />
       <Box position="relative" zIndex={1}>
-        <SectionHeading eyebrow="Perfil del jugador" title="EL PER" accent="FIL" />
+        <SectionHeading eyebrow="Ficha Técnica" title="ESTADIS" accent="TICAS" />
 
         <Grid
           templateColumns={{ base: '1fr', lg: '1fr 1.1fr 1fr' }}
@@ -315,12 +460,22 @@ export function StatsSection() {
         >
           {/* Bio card */}
           <GridItem>
+            <Text
+                fontFamily="condensed"
+                fontSize="11px"
+                letterSpacing="0.28em"
+                textTransform="uppercase"
+                color="whiteAlpha.600"
+                mb={5}
+              >
+                Datos personales
+              </Text>
             <Box
               bg="rgba(255,255,255,0.02)"
               border="1px solid"
               borderColor="whiteAlpha.100"
               p={{ base: 5, md: 6 }}
-              h="100%"
+              h="91%"
               position="relative"
               sx={{
                 '&::before': {
@@ -334,16 +489,6 @@ export function StatsSection() {
                 },
               }}
             >
-              <Text
-                fontFamily="condensed"
-                fontSize="11px"
-                letterSpacing="0.28em"
-                textTransform="uppercase"
-                color="whiteAlpha.600"
-                mb={5}
-              >
-                Datos personales
-              </Text>
               <VStack align="stretch" spacing={4}>
                 {BIO.map((row) => (
                   <Flex
@@ -353,6 +498,11 @@ export function StatsSection() {
                     borderBottom="1px solid"
                     borderColor="whiteAlpha.50"
                     pb={3}
+                    transition="all 0.3s ease"
+                    _hover={{ 
+                      borderColor: 'rgba(156,117,90,0.5)',
+                      transform: 'translateY(-2px)',
+                    }}
                   >
                     <Text
                       fontFamily="condensed"
@@ -382,7 +532,7 @@ export function StatsSection() {
               color="whiteAlpha.600"
               mb={5}
             >
-              Temporada actual
+              Última temporada
             </Text>
             <SimpleGrid columns={2} spacing={4}>
               {playerData.seasonStats.map((s, i) => (

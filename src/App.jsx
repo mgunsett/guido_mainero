@@ -14,7 +14,13 @@ function App() {
     <Box position="relative" bg="brand.dark" overflowX="hidden">
       <Navbar />
       <Hero />
-      <StatsSection />
+      {/* StatsSection is pulled up −100vh so it slides over the still-pinned
+          Hero (the "section reveal" cover). This −100vh mirrors the 100vh
+          cover phase reserved by the Hero's tall sticky wrapper. zIndex 21
+          guarantees it paints above the Hero (zIndex 1). */}
+      <Box position="relative" zIndex={21} mt={{ base: '-100vh', md: '-100vh' }}>
+        <StatsSection />
+      </Box>
       <VideosSection />
       <GallerySection />
       <PressSection />

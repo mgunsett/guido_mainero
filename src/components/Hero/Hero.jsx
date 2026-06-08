@@ -1,5 +1,6 @@
 import { useRef, useEffect, useMemo } from 'react'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text, Image } from '@chakra-ui/react'
+import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -8,6 +9,49 @@ import MatchBox from './MatchBox'
 
 gsap.registerPlugin(ScrollTrigger)
 
+
+// ── HoverFloat: tilt 3D en hover (rotateX/Y con GSAP) ──
+// ─── HOVER FLOAT ─────────────────────────────────────────────────
+function HoverFloat({ children, intensity = 1 }) {
+  const ref = useRef(null)
+
+  const onMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const dx = ((e.clientX - r.left) / r.width  - 0.5) * 2
+    const dy = ((e.clientY - r.top)  / r.height - 0.5) * 2
+    gsap.to(el, {
+      x: dx * 7 * intensity,
+      y: dy * 5 * intensity,
+      rotateX: -dy * 4 * intensity,
+      rotateY:  dx * 4 * intensity,
+      duration: 0.35,
+      ease: 'power2.out',
+      transformPerspective: 600,
+    })
+  }
+
+  const onLeave = () => {
+    gsap.to(ref.current, {
+      x: 0, y: 0, rotateX: 0, rotateY: 0,
+      duration: 0.55,
+      ease: 'power3.out',
+    })
+  }
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ display: 'inline-block', transformStyle: 'preserve-3d',  cursor: 'default' }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function Hero() {
   const sectionRef = useRef(null)
   const innerRef = useRef(null)
@@ -15,95 +59,92 @@ export function Hero() {
   const lettersRef = useRef(null)
   const photoRef = useRef(null)
   const glowRef = useRef(null)
-  const vignetteRef = useRef(null)
 
-  // Palabra grande del hero: último término del nombre.
-  const heroWord = useMemo(() => {
-    const parts = playerData.name.trim().split(/\s+/)
-    return (parts[parts.length - 1] || playerData.name).toUpperCase()
-  }, [])
+  // Dos palabras apiladas: nombre (chico) + apellido (grande, con impacto).
+  const words = useMemo(
+    () => [
+      {
+        text: playerData.name.toUpperCase(),
+        ghostFs: { base: '60vw', md: '11vw', lg: '18vw' },
+        fs: { base: '35vw', md: '10vw', lg: '11vw' },
+        spacing: { base: '-0.02em', md: '0.3em' },
+        m: { base: '-0.02em', md: '0.3em', lg: '210px' },
+      },
+      {
+        text: playerData.fullName.toUpperCase(),
+        ghostFs: { base: '60vw', md: '24vw', lg: '32vw' },
+        fs: { base: '40vw', md: '22vw', lg: '23vw' },
+        spacing: { base: '-0.02em', md: '-0.04em' },
+      },
+    ],
+    []
+  )
 
-  const letters = useMemo(() => heroWord.split(''), [heroWord])
-
-  // ── Entry animation + vignette scrub ──────────────────
+  // ── Entry animation ───────────────────────────────────
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const ctx = gsap.context(() => {
+      if (reduced) {
+        gsap.set(photoRef.current, { clipPath: 'inset(0%)' })
+        return
+      }
       const letterEls = lettersRef.current?.querySelectorAll('[data-letter]')
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
-      if (!reduced && letterEls?.length) {
-        const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+      if (letterEls?.length) {
         tl.fromTo(
           letterEls,
-          { yPercent: 110 },
-          { yPercent: 0, duration: 1.4, stagger: 0.08 },
-          0.2
+          { yPercent: 110, opacity: 0, rotateX: -40 },
+          { yPercent: 0, opacity: 1, rotateX: 0, duration: 1.1, stagger: 0.08 },
+          0
         )
-        tl.fromTo(
-          photoRef.current,
-          { clipPath: 'inset(100% 0% 0% 0%)' },
-          { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6 },
-          0.5
-        )
-        // glow flash
+      }
+      tl.fromTo(
+        photoRef.current,
+        { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.06, filter: 'brightness(1.8) saturate(0.4)' },
+        { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, filter: 'brightness(1) saturate(1)', duration: 1.5 },
+        0.25
+      )
+      if (glowRef.current) {
         tl.fromTo(
           glowRef.current,
           { opacity: 0 },
-          { opacity: 1, duration: 0.4, yoyo: true, repeat: 1 },
+          {
+            opacity: 1, duration: 0.18, ease: 'power2.in',
+            onComplete: () => gsap.to(glowRef.current, { opacity: 0, duration: 0.55, ease: 'power2.out' }),
+          },
           1.55
         )
-      } else {
-        gsap.set(photoRef.current, { clipPath: 'inset(0%)' })
       }
-
-      // Vignette se intensifica al hacer scroll
-      gsap.fromTo(
-        vignetteRef.current,
-        { opacity: 0.35 },
-        {
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }
-      )
     }, sectionRef)
-
     return () => ctx.revert()
   }, [])
 
-  // ── Mouse parallax ────────────────────────────────────
+  // ── Mouse parallax — elemento individual + stagger ───
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) return
-    const inner = innerRef.current
-    if (!inner) return
-
-    const bgX = gsap.quickTo(ghostRef.current, 'x', { duration: 0.6, ease: 'power2.out' })
-    const bgY = gsap.quickTo(ghostRef.current, 'y', { duration: 0.6, ease: 'power2.out' })
-    const midX = gsap.quickTo(lettersRef.current, 'x', { duration: 0.6, ease: 'power2.out' })
-    const midY = gsap.quickTo(lettersRef.current, 'y', { duration: 0.6, ease: 'power2.out' })
-    const phX = gsap.quickTo(photoRef.current, 'x', { duration: 0.6, ease: 'power2.out' })
-    const phY = gsap.quickTo(photoRef.current, 'y', { duration: 0.6, ease: 'power2.out' })
+    const container = innerRef.current
+    if (!container) return
 
     const onMove = (e) => {
-      const r = inner.getBoundingClientRect()
-      const nx = (e.clientX - r.left) / r.width - 0.5
-      const ny = (e.clientY - r.top) / r.height - 0.5
-      bgX(nx * 6)
-      bgY(ny * 6)
-      midX(nx * 14)
-      midY(ny * 14)
-      phX(nx * 28)
-      phY(ny * 28)
+      const rect = container.getBoundingClientRect()
+      const xn = (e.clientX - rect.left) / rect.width - 0.5
+      const yn = (e.clientY - rect.top) / rect.height - 0.5
+
+      const ghostFirst = ghostRef.current?.querySelector('[data-ghost-first]')
+      if (ghostFirst) gsap.to(ghostFirst, { x: xn * 4, y: yn * 2, duration: 1.8, ease: 'power2.out' })
+
+      const ghostSecond = ghostRef.current?.querySelector('[data-ghost-second]')
+      if (ghostSecond) gsap.to(ghostSecond, { x: xn * 6, y: yn * 3, duration: 1.6, ease: 'power2.out' })
+
+      const letterEls = lettersRef.current?.querySelectorAll('[data-letter]')
+      if (letterEls?.length) gsap.to(letterEls, { x: xn * 14, y: yn * 7, duration: 1.2, ease: 'power2.out', stagger: 0.02 })
+
     }
 
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
+    container.addEventListener('mousemove', onMove)
+    return () => container.removeEventListener('mousemove', onMove)
   }, [])
 
   return (
@@ -127,46 +168,56 @@ export function Hero() {
         {/* ── Layer 1: ghost text + grid + glow (z=1) ── */}
         <Box ref={ghostRef} position="absolute" inset={0} zIndex={1}>
           <Box className="deco-grid" />
-          {/* glow esquina superior izq */}
+          {/* glow esquina superior izq (brand.brown) */}
           <Box
             position="absolute"
             top="-10%"
             left="-5%"
             w="60vw"
             h="60vw"
-            background="radial-gradient(ellipse, rgba(156,117,90,0.07) 0%, transparent 70%)"
+            background="radial-gradient(ellipse, rgba(156,117,90,0.10) 0%, transparent 70%)"
             pointerEvents="none"
           />
-          {/* glow esquina inferior der */}
+          {/* glow esquina inferior der (brand.brown) */}
           <Box
             position="absolute"
             bottom="-10%"
             right="-5%"
             w="55vw"
             h="55vw"
-            background="radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%)"
+            background="radial-gradient(ellipse, rgba(156,117,90,0.07) 0%, transparent 70%)"
             pointerEvents="none"
           />
+
+          {/* ── Letras Invisibles Bg ── */}
           <Flex
             position="absolute"
             inset={0}
+            direction="column"
             align="center"
             justify="center"
+            lineHeight={0.82}
           >
-            <Text
-              fontFamily="heading"
-              fontSize={{ base: '34vw', md: '28vw', lg: '24vw' }}
-              lineHeight={0.85}
-              letterSpacing="0.01em"
-              color="transparent"
-              sx={{
-                WebkitTextStroke: '1px rgba(255,255,255,0.06)',
-              }}
-              userSelect="none"
-              whiteSpace="nowrap"
-            >
-              {heroWord}
-            </Text>
+            <HoverFloat intensity={0.2}>
+            {words.map((w, wi) => (
+              <Text
+                key={wi}
+                data-ghost-first={wi === 0 ? true : undefined}
+                data-ghost-second={wi === 1 ? true : undefined}
+                fontFamily="heading"
+                ml={w.m}
+                fontSize={w.ghostFs}
+                lineHeight={0.82}
+                letterSpacing={w.spacing}
+                color="transparent"
+                sx={{ WebkitTextStroke: '1px rgba(255,255,255,0.06)' }}
+                userSelect="none"
+                whiteSpace="nowrap"
+              >
+                {w.text}
+              </Text>
+            ))}
+            </HoverFloat>
           </Flex>
         </Box>
 
@@ -181,36 +232,39 @@ export function Hero() {
           background="radial-gradient(ellipse at 50% 60%, rgba(156,117,90,0.18) 0%, transparent 60%)"
         />
 
-        {/* ── Layer 2: letras visibles (z=5) ── */}
+        {/* ── Letras Visibles White ── */}
         <Box
           ref={lettersRef}
           position="absolute"
           inset={0}
           zIndex={5}
           display="flex"
+          flexDirection="column"
           alignItems="center"
           justifyContent="center"
           pointerEvents="none"
         >
-          <Flex overflow="hidden" lineHeight={0.82}>
-            {letters.map((ch, i) => (
-              <Box
-                key={i}
-                data-letter
-                as="span"
-                display="inline-block"
-                fontFamily="heading"
-                fontSize={{ base: '20vw', md: '24vw', lg: '20vw' }}
-                color="white"
-                letterSpacing="-0.01em"
-              >
-                {ch}
-              </Box>
-            ))}
-          </Flex>
+          {words.map((w, wi) => (
+            <Flex key={wi} overflow="hidden" lineHeight={0.82}>
+              {w.text.split('').map((ch, i) => (
+                <Box
+                  key={`${wi}-${i}`}
+                  data-letter
+                  as="span"
+                  display="inline-block"
+                  fontFamily="heading"
+                  fontSize={w.fs}
+                  color="white"
+                  letterSpacing={w.spacing}
+                >
+                  {ch}
+                </Box>
+              ))}
+            </Flex>
+          ))}
         </Box>
 
-        {/* ── Layer 3: foto jugador (z=10) ── */}
+        {/* ── Layer 3: foto jugador con tilt 3D (z=10) ── */}
         <Flex
           position="absolute"
           inset={0}
@@ -219,71 +273,102 @@ export function Hero() {
           justify="center"
           pointerEvents="none"
         >
-          <Box
+          <Image
             ref={photoRef}
-            as="img"
             src={playerData.image}
             alt={playerData.fullName}
             h={{ base: '72vh', md: '86vh', lg: '92vh' }}
             objectFit="contain"
             objectPosition="bottom center"
             sx={{ clipPath: 'inset(100% 0% 0% 0%)' }}
-            filter="drop-shadow(0 30px 60px rgba(0,0,0,0.6))"
+            draggable={false}
           />
-        </Flex>
+         </Flex>
 
-        {/* ── Static UI: número + posición + club (izq) ── */}
+        {/* ── Static UI Desktop ── */}
         <Box
           position="absolute"
           left={{ base: 6, md: 12, lg: 20 }}
           top="50%"
           transform="translateY(-50%)"
-          zIndex={20}
+          zIndex={15}
         >
-          <Text
-            fontFamily="heading"
-            fontSize={{ base: '7xl', md: '8xl' }}
-            lineHeight={0.9}
-            color="transparent"
-            sx={{ WebkitTextStroke: '2px rgba(156,117,90,0.9)' }}
-          >
-            {playerData.number}
-          </Text>
-          <Text
-            fontFamily="condensed"
-            fontSize={{ base: '10px', md: 'xs' }}
-            letterSpacing="0.28em"
-            textTransform="uppercase"
-            color="whiteAlpha.700"
-            mt={2}
-          >
-            {playerData.position}
-          </Text>
-          <Text
-            fontFamily="condensed"
-            fontSize={{ base: '10px', md: 'xs' }}
-            letterSpacing="0.2em"
-            textTransform="uppercase"
-            color="brand.brown"
-            mt={1}
-          >
-            {playerData.nationalityFlag} {playerData.nationality}
-          </Text>
+          <HoverFloat intensity={1.2}>
+            <Text
+              fontFamily="heading"
+              fontSize={{ base: '80px', md: '130px' }}
+              lineHeight={0.9}
+              color="transparent"
+              sx={{ WebkitTextStroke: '2px rgba(156,117,90,0.9)' }}
+            >
+              {playerData.number}
+            </Text>
+          </HoverFloat>
+          <Box h="1px" w="80px" bg="brand.brown" mb={3} />
+          <Flex direction="column" align="flex-start" >
+            <HoverFloat intensity={0.6}>
+              <Text
+                fontFamily="condensed"
+                fontSize={{ base: '10px', md: 'xs' }}
+                letterSpacing="0.28em"
+                textTransform="uppercase"
+                color="whiteAlpha.700"
+                mt={2}
+              >
+                {playerData.position}
+              </Text>
+            </HoverFloat>
+            <HoverFloat intensity={1.2}>
+              <Text
+                fontFamily="condensed"
+                fontSize={{ base: '10px', md: 'xs' }}
+                letterSpacing="0.2em"
+                textTransform="uppercase"
+                color="brand.brown"
+                mt={1}
+              >
+                {playerData.nationalityFlag} {playerData.nationality}
+              </Text>
+            </HoverFloat>
+          </Flex>
+          {/* Club: escudo + nombre inline */}
+          <HoverFloat intensity={0.6}>
+          <Flex align="center" gap={2} mt={3}>
+            <Box
+              as="img"
+              src={playerData.logoCurrentClub}
+              alt={playerData.currentClub}
+              h={{ base: '18px', md: '38px' }}
+              w={{ base: '18px', md: '38px' }}
+              objectFit="contain"
+              flexShrink={0}
+            />
+            <Text
+              fontFamily="condensed"
+              fontSize={{ base: '10px', md: 'xs' }}
+              letterSpacing="0.16em"
+              textTransform="uppercase"
+              color="whiteAlpha.700"
+            >
+              {playerData.currentClub}
+            </Text>
+          </Flex>
+          </HoverFloat>
         </Box>
 
-        {/* ── MatchBox float (der desktop) ── */}
+        {/* ── MatchBox float (der desktop, z=15) ── */}
         <Box
           display={{ base: 'none', lg: 'block' }}
           position="absolute"
           right={20}
           top="50%"
           transform="translateY(-50%)"
-          zIndex={20}
+          zIndex={15}
         >
           <MatchBox variant="float" />
         </Box>
 
-        {/* ── MatchBox strip (mobile) ── */}
+        {/* ── MatchBox strip (mobile, z=15) ── */}
         <Box
           display={{ base: 'block', lg: 'none' }}
           position="absolute"
@@ -291,61 +376,132 @@ export function Hero() {
           left={0}
           right={0}
           px={6}
-          zIndex={20}
+          zIndex={15}
         >
           <MatchBox variant="strip" />
         </Box>
 
-        {/* ── Marquee bottom ── */}
-        <Box
-          position="absolute"
-          bottom={0}
-          left={0}
-          right={0}
-          zIndex={23}
-          borderTop="1px solid"
-          borderColor="whiteAlpha.100"
-          bg="rgba(8,12,18,0.6)"
-          backdropFilter="blur(8px)"
-          py={2}
-          overflow="hidden"
-        >
-          <Box className="marquee-track">
-            {[...Array(2)].map((_, dup) => (
-              <Flex key={dup} as="span" align="center">
-                {playerData.marqueeItems.map((item, i) => (
-                  <Text
-                    key={`${dup}-${i}`}
-                    as="span"
-                    fontFamily="condensed"
-                    fontSize="xs"
-                    letterSpacing="0.24em"
-                    textTransform="uppercase"
-                    color="whiteAlpha.600"
-                    px={6}
-                  >
-                    {item}
-                  </Text>
-                ))}
-              </Flex>
-            ))}
-          </Box>
+        {/* ── ScrollIndicator (costado izq, desktop, z=16) ── */}
+        <Box display={{ base: 'none', lg: 'block' }}>
+          <ScrollIndicator />
         </Box>
+
+        {/* ── Marquee bottom (z=18) ── */}
+        <MarqueeBar />
 
         {/* Noise overlay (z=22) */}
         <Box className="noise-overlay" zIndex={22} />
 
-        {/* Vignette (z=24) */}
+        {/* Vignette (z=24) — sutil y estática, sin oscurecer en scroll */}
         <Box
-          ref={vignetteRef}
           position="absolute"
           inset={0}
           zIndex={24}
           pointerEvents="none"
-          background="radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(8,12,18,0.85) 100%)"
+          background="radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(8,12,18,0.35) 100%)"
         />
       </Box>
     </Box>
+  )
+}
+
+// ─── SUB-COMPONENTS ─────────────────────────────────────────────
+
+// motion.div es el elemento raíz — sin Chakra encima para que Framer
+// reciba sus props directamente (y: [0,8,0] infinito).
+function ScrollIndicator() {
+  return (
+    <motion.div
+      style={{
+        position: 'absolute',
+        bottom: '80px',
+        left: '24px',
+        zIndex: 16,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+        pointerEvents: 'none',
+      }}
+      animate={{ y: [0, 8, 0] }}
+      transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+    >
+      <div
+        style={{
+          width: '1px',
+          height: '48px',
+          background: 'linear-gradient(to bottom, transparent, #9c755a)',
+        }}
+      />
+      <span
+        style={{
+          fontFamily: "'Barlow Condensed', sans-serif",
+          fontSize: '10px',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.35)',
+          writingMode: 'vertical-rl',
+          textOrientation: 'mixed',
+        }}
+      >
+        Scroll
+      </span>
+    </motion.div>
+  )
+}
+
+function MarqueeBar() {
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const anim = gsap.to(el, {
+      x: () => -el.scrollWidth / 2,
+      duration: 25,
+      ease: 'none',
+      repeat: -1,
+    })
+    return () => anim.kill()
+  }, [])
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 18,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(156,117,90,0.08)',
+        backdropFilter: 'blur(8px)',
+        padding: '10px 0',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        ref={trackRef}
+        style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
+      >
+        {[...playerData.marqueeItems, ...playerData.marqueeItems].map((item, i) => (
+          <span
+            key={i}
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: item === '·' ? 300 : 600,
+              fontSize: '12px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: item === '·' ? '#9c755a' : 'rgba(255,255,255,0.48)',
+              marginRight: '24px',
+            }}
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
   )
 }
 

@@ -20,25 +20,30 @@ import g4 from '../assets/gallery/1V3A5808.webp'
 import g5 from '../assets/gallery/1V6A5944.webp'
 
 // ── Logos de clubes ───────────────────────────────────
-import platense from '../assets/escudo_platense.webp'
+import platense from '../assets/escudos/escudo_platense.webp'
+import sarmiento from '../assets/escudos/escudo_sarmiento.png'
+import iquique from '../assets/escudos/escudo_iquique.png'
+import defensa from '../assets/escudos/escudo_defensa.png'
+import velez from '../assets/escudos/escudo_velez.png'
+import instituto from '../assets/escudos/escudo_instituto.webp'
 // ── Videos ────────────────────────────────────────────
-import heroVideo from '../assets/videos/Diseño sin título (1).mp4'
+import video from '../assets/videos/video_highlight.mp4'
 
 export const playerData = {
-  name: 'GUIDO MAINERO',
-  fullName: 'Guido Mainero',
+  name: 'GUIDO',
+  fullName: 'MAINERO',
   number: 7,
-  position: 'Mediocampista Ofensivo',
-  positionShort: 'MCO',
+  position: 'Extremo Derecho',
+  positionShort: 'ED',
   nationality: 'Argentina',
   nationalityFlag: '🇦🇷',
-  age: 24,
-  height: '1,77 m',
+  age: 31,
+  height: '1,78 m',
   weight: '70 kg',
   foot: 'Izquierdo  ',
   birthDate: '23 de Marzo, 1995',
   birthPlace: 'Córdoba, Argentina',
-  currentClub: 'Club Atlético Platense',
+  currentClub: 'C.A Platense',
   logoCurrentClub: platense,
   image: playerImg,
 
@@ -48,45 +53,61 @@ export const playerData = {
     { label: 'Visión', value: 91 },
     { label: 'Regate', value: 85 },
     { label: 'Tiro', value: 79 },
-    { label: 'Resistencia', value: 83 },
-    { label: 'Velocidad', value: 80 },
+    { label: 'Resistencia', value: 82 },
+    { label: 'Velocidad', value: 87 },
   ],
 
   // Tarjetas de temporada
   seasonStats: [
-    { label: 'Partidos', value: '32' },
-    { label: 'Goles', value: '11' },
-    { label: 'Asistencias', value: '14' },
-    { label: 'Minutos', value: '2680' },
-    { label: 'Pases clave', value: '58' },
+    { label: 'Partidos', value: '22' },
+    { label: 'Goles', value: '1' },
+    { label: 'Asistencias', value: '4' },
+    { label: 'Minutos', value: '1502' },
+    { label: 'Pases', value: '78' },
     { label: 'Valoración', value: '7.8' },
   ],
 
   // Timeline de clubes
   clubs: [
     {
-      name: 'Inferiores',
-      country: 'Argentina',
-      years: '2014 — 2019',
-      logo: '',
-      titles: ['Campeón Juvenil 2018'],
-      info: 'Formación en divisiones inferiores.',
+      name: 'C.A Platense',
+      country: 'Liga Argentina',
+      years: '2023 — Actualidad',
+      escudo: platense,
+      titles: ['Liga Apertura 2025'],
     },
     {
-      name: 'Primera División',
+      name: 'Sarmiento de Junín',
       country: 'Argentina',
-      years: '2020 — 2022',
-      logo: '',
-      titles: ['Debut profesional', 'Copa Liga 2021'],
-      info: 'Consolidación como titular.',
+      years: '2021 — 2023',
+      escudo: sarmiento,
     },
     {
-      name: 'Club Atlético',
+      name: 'Deportes Iquique',
+      country: 'Chile',
+      years: '2021',
+      escudo: iquique,
+      info: 'Préstamo',
+    },
+    {
+      name: 'Defensa y Justicia',
       country: 'Argentina',
-      years: '2022 — Actualidad',
-      logo: '',
-      titles: ['Subcampeón 2023', 'Mejor jugador joven'],
-      info: 'Referente del mediocampo.',
+      years: '2020',
+      escudo: defensa,
+      info: 'Préstamo',
+    },
+    {
+      name: 'Vélez Sarsfield',
+      country: 'Argentina',
+      years: '2018 — 2020',
+      escudo: velez,
+    },
+    {
+      name: 'Instituto de Córdoba',
+      country: 'Argentina',
+      years: '2014 — 2017',
+      escudo: instituto,
+      info: 'Debút Profesional',
     },
   ],
 
@@ -94,12 +115,12 @@ export const playerData = {
   videos: [
     {
       id: 'v1',
-      title: 'Highlights — Temporada 2024',
-      duration: '2:14',
+      title: 'Highlights 2026',
+      duration: '0:46',
       thumbnail: g2,
       cover: g2,
-      src: heroVideo,
-      previewSrc: heroVideo,
+      src: video,
+      previewSrc: video,
       category: 'Highlights',
     },
   ],
@@ -241,11 +262,12 @@ export const playerData = {
     },
   ],
 
+  // ─── MARQUEE DATA ────────────────────────────────────────────────
   marqueeItems: [
-    'MEDIOCAMPISTA · CREADOR DE JUEGO · #10',
-    'VISIÓN · TÉCNICA · GOL',
-    'GUIDO MAINERO · ARGENTINA',
-    'PASIÓN POR EL FÚTBOL',
+    'CLUB ATLETICO PLATENSE', '·', 'DELANTERO', '·', 'CORDOBA', '·', 'ARGENTINA', '·',
+    '#7', '·', 'LIGA ARGENTINA', '·', 'ZURDO', '·', '1.77m', '·',
+    'CLUB ATLETICO PLATENSE', '·', 'DELANTERO', '·', 'CORDOBA', '·', 'ARGENTINA', '·',
+    '#7', '·', 'LIGA ARGENTINA', '·', 'ZURDO', '·', '1.77m', '·',
   ],
 }
 

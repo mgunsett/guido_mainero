@@ -1,16 +1,24 @@
 import { useRef, useEffect, useState } from 'react'
 import { Box, Flex, Text, AspectRatio } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FiPlay, FiX } from 'react-icons/fi'
+import { FiPlay, FiX, FiArrowRight } from 'react-icons/fi'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import { playerData } from '../../data/playerData'
-import SectionHeading from '../UI/SectionHeading'
+import { useScrubReveal } from '../../hooks/useScrubReveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const MotionBox = motion(Box)
+
+// Pulso continuo del anillo del botón play
+const pulse = keyframes`
+  0%   { transform: scale(1);   opacity: 0.5; }
+  70%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+`
 
 function Bracket({ pos, hovered }) {
   const map = {
@@ -23,25 +31,29 @@ function Bracket({ pos, hovered }) {
     <Box
       position="absolute"
       {...map[pos]}
-      w={hovered ? '48px' : '26px'}
-      h={hovered ? '48px' : '26px'}
+      w={hovered ? { base: '34px', md: '48px' } : { base: '20px', md: '26px' }}
+      h={hovered ? { base: '34px', md: '48px' } : { base: '20px', md: '26px' }}
       borderColor="brand.brown"
       transition="all 0.4s ease"
       boxShadow={hovered ? '0 0 16px rgba(156,117,90,0.6)' : 'none'}
       pointerEvents="none"
+      zIndex={3}
     />
   )
 }
 
 export function VideosSection() {
   const video = playerData.videos[0]
+  const headerRef = useScrubReveal({ y: 30 })
   const wrapRef = useRef(null)
   const revealRef = useRef(null)
   const previewRef = useRef(null)
   const [hovered, setHovered] = useState(false)
   const [open, setOpen] = useState(false)
 
-  // Reveal via clipPath al scroll
+  // Reveal via clipPath al scroll — el player es visible por defecto;
+  // solo aplicamos el wipe desde JS y una sola vez, así si el trigger
+  // no dispara (layout sticky del Hero) el video igual queda a la vista.
   useEffect(() => {
     const el = revealRef.current
     if (!el) return
@@ -53,12 +65,13 @@ export function VideosSection() {
         { clipPath: 'inset(0 100% 0 0)' },
         {
           clipPath: 'inset(0 0% 0 0)',
-          ease: 'none',
+          duration: 1.1,
+          ease: 'power3.out',
+          immediateRender: false,
           scrollTrigger: {
             trigger: wrapRef.current,
-            start: 'top 80%',
-            end: 'top 35%',
-            scrub: 0.6,
+            start: 'top 85%',
+            once: true,
           },
         }
       )
@@ -97,30 +110,94 @@ export function VideosSection() {
       bg="#080C12"
       px={{ base: 6, md: 12, lg: 20 }}
       py={{ base: 20, md: 28 }}
+      overflow="hidden"
     >
       <Box className="deco-grid" />
+      {/* glow ambiental */}
       <Box
         position="absolute"
-        top="5%"
-        right="-5%"
-        w="50vw"
-        h="50vw"
-        background="radial-gradient(ellipse, rgba(156,117,90,0.06) 0%, transparent 70%)"
+        top="0%"
+        right="-10%"
+        w="55vw"
+        h="55vw"
+        background="radial-gradient(ellipse, rgba(156,117,90,0.08) 0%, transparent 70%)"
+        pointerEvents="none"
+      />
+      <Box
+        position="absolute"
+        bottom="-10%"
+        left="-8%"
+        w="45vw"
+        h="45vw"
+        background="radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%)"
         pointerEvents="none"
       />
 
-      <Box position="relative" zIndex={1}>
-        <SectionHeading eyebrow="En la cancha" title="VID" accent="EOS" />
+      <Box position="relative" zIndex={1} maxW="1200px" mx="auto">
+        {/* ── Header: título + metadata ── */}
+        <Flex
+          ref={headerRef}
+          justify="space-between"
+          align="flex-end"
+          gap={6}
+          mb={{ base: 10, md: 14 }}
+        >
+          <Box>
+            <Text
+              fontFamily="condensed"
+              fontSize="11px"
+              letterSpacing="0.36em"
+              textTransform="uppercase"
+              color="brand.brown"
+              mb={3}
+            >
+              Video
+            </Text>
+            <Text
+              fontFamily="heading"
+              fontSize={{ base: '5xl', md: '7xl' }}
+              lineHeight={0.95}
+              letterSpacing="0.01em"
+            >
+              HIGH
+              <Box as="span" color="brand.brown">
+                LIGHTS
+              </Box>
+            </Text>
+          </Box>
 
+          {/* metadata derecha — oculta en mobile */}
+          <Flex
+            display={{ base: 'none', md: 'flex' }}
+            align="center"
+            gap={3}
+            flexShrink={0}
+            pb={2}
+          >
+            <Box h="1px" w="40px" bg="brand.brown" opacity={0.6} />
+            <Text
+              fontFamily="condensed"
+              fontSize="xs"
+              letterSpacing="0.22em"
+              textTransform="uppercase"
+              color="whiteAlpha.700"
+            >
+              {playerData.currentClub}
+            </Text>
+          </Flex>
+        </Flex>
+
+        {/* ── Player ── */}
         <Box ref={wrapRef}>
           <Box
             ref={revealRef}
             position="relative"
             cursor="pointer"
+            role="group"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             onClick={() => setOpen(true)}
-            sx={{ clipPath: 'inset(0 100% 0 0)' }}
+            boxShadow="0 30px 80px rgba(0,0,0,0.5)"
           >
             <AspectRatio ratio={16 / 9}>
               <Box position="relative" overflow="hidden">
@@ -135,7 +212,8 @@ export function VideosSection() {
                   h="100%"
                   objectFit="cover"
                   opacity={hovered ? 0 : 1}
-                  transition="opacity 0.5s ease"
+                  transition="opacity 0.5s ease, transform 0.6s ease"
+                  transform={hovered ? 'scale(1.04)' : 'scale(1)'}
                 />
                 {/* preview muted */}
                 <Box
@@ -157,69 +235,176 @@ export function VideosSection() {
                 <Box
                   position="absolute"
                   inset={0}
-                  bg="linear-gradient(180deg, rgba(8,12,18,0.1) 0%, rgba(8,12,18,0.7) 100%)"
+                  bg="linear-gradient(180deg, rgba(8,12,18,0.15) 0%, rgba(8,12,18,0.25) 45%, rgba(8,12,18,0.8) 100%)"
                 />
-                {/* play btn */}
+
+                {/* badge categoría arriba-izq */}
                 <Flex
                   position="absolute"
-                  inset={0}
+                  top={{ base: 3, md: 5 }}
+                  left={{ base: 3, md: 5 }}
                   align="center"
-                  justify="center"
+                  gap={2}
+                  bg="rgba(8,12,18,0.55)"
+                  backdropFilter="blur(6px)"
+                  border="1px solid"
+                  borderColor="rgba(156,117,90,0.5)"
+                  px={3}
+                  py="6px"
+                  zIndex={3}
                 >
-                  <Flex
-                    align="center"
-                    justify="center"
-                    w={{ base: '64px', md: '88px' }}
-                    h={{ base: '64px', md: '88px' }}
-                    border="1px solid"
-                    borderColor="whiteAlpha.700"
-                    bg="rgba(156,117,90,0.15)"
-                    backdropFilter="blur(6px)"
-                    transition="all 0.3s ease"
-                    transform={hovered ? 'scale(1.08)' : 'scale(1)'}
+                  <Box w="6px" h="6px" borderRadius="full" bg="brand.brown" />
+                  <Text
+                    fontFamily="condensed"
+                    fontSize="10px"
+                    letterSpacing="0.24em"
+                    textTransform="uppercase"
+                    color="white"
                   >
-                    <Box as={FiPlay} fontSize={{ base: '24px', md: '32px' }} ml={1} />
-                  </Flex>
+                    {video.category}
+                  </Text>
                 </Flex>
+
+                {/* play circular con pulso */}
+                <Flex position="absolute" inset={0} align="center" justify="center" zIndex={3}>
+                  <Box position="relative" w={{ base: '70px', md: '96px' }} h={{ base: '70px', md: '96px' }}>
+                    {/* anillos de pulso */}
+                    <Box
+                      position="absolute"
+                      inset={0}
+                      borderRadius="full"
+                      border="1px solid"
+                      borderColor="brand.brown"
+                      animation={`${pulse} 2.6s ease-out infinite`}
+                    />
+                    <Box
+                      position="absolute"
+                      inset={0}
+                      borderRadius="full"
+                      border="1px solid"
+                      borderColor="brand.brown"
+                      animation={`${pulse} 2.6s ease-out infinite 1.3s`}
+                    />
+                    {/* botón */}
+                    <Flex
+                      position="absolute"
+                      inset={0}
+                      align="center"
+                      justify="center"
+                      borderRadius="full"
+                      border="1px solid"
+                      borderColor="whiteAlpha.700"
+                      bg="rgba(156,117,90,0.22)"
+                      backdropFilter="blur(8px)"
+                      transition="all 0.35s ease"
+                      transform={hovered ? 'scale(1.1)' : 'scale(1)'}
+                      _groupHover={{ bg: 'rgba(156,117,90,0.4)', borderColor: 'white' }}
+                    >
+                      <Box
+                        as={FiPlay}
+                        fontSize={{ base: '26px', md: '34px' }}
+                        ml="3px"
+                        color="white"
+                      />
+                    </Flex>
+                  </Box>
+                </Flex>
+
+                {/* hint inferior centrado */}
+                <Flex
+                  position="absolute"
+                  bottom={{ base: 4, md: 6 }}
+                  left={0}
+                  right={0}
+                  justify="center"
+                  zIndex={3}
+                  opacity={hovered ? 0 : 1}
+                  transition="opacity 0.4s ease"
+                  pointerEvents="none"
+                >
+                  <Text
+                    fontFamily="condensed"
+                    fontSize={{ base: '9px', md: '11px' }}
+                    letterSpacing="0.3em"
+                    textTransform="uppercase"
+                    color="whiteAlpha.700"
+                  >
+                    <Box as="span" display={{ base: 'none', md: 'inline' }}>
+                      Pasá el cursor para previsualizar
+                    </Box>
+                    <Box as="span" display={{ base: 'inline', md: 'none' }}>
+                      Tocá para reproducir
+                    </Box>
+                  </Text>
+                </Flex>
+
                 <Bracket pos="tl" hovered={hovered} />
                 <Bracket pos="tr" hovered={hovered} />
                 <Bracket pos="bl" hovered={hovered} />
                 <Bracket pos="br" hovered={hovered} />
               </Box>
             </AspectRatio>
+          </Box>
 
-            {/* barra inferior con sheen */}
-            <Flex
-              className="sheen-bar"
-              align="center"
-              justify="space-between"
-              bg="rgba(255,255,255,0.03)"
-              border="1px solid"
-              borderColor="whiteAlpha.100"
-              borderTop="none"
-              px={{ base: 4, md: 6 }}
-              py={4}
-            >
-              <Box>
+          {/* ── Footer: info + ver completo ── */}
+          <Flex
+            mt={{ base: 5, md: 6 }}
+            direction={{ base: 'column', sm: 'row' }}
+            align={{ base: 'flex-start', sm: 'center' }}
+            justify="space-between"
+            gap={{ base: 4, sm: 6 }}
+          >
+            <Flex align="center" gap={{ base: 3, md: 4 }} minW={0}>
+              <Box h="1px" w={{ base: '24px', md: '48px' }} bg="brand.brown" flexShrink={0} />
+              <Box minW={0}>
+                <Text
+                  fontFamily="heading"
+                  fontSize={{ base: 'lg', md: 'xl' }}
+                  lineHeight={1.1}
+                  noOfLines={1}
+                >
+                  {video.title}
+                </Text>
                 <Text
                   fontFamily="condensed"
                   fontSize="10px"
-                  letterSpacing="0.28em"
+                  letterSpacing="0.2em"
                   textTransform="uppercase"
-                  color="brand.brown"
-                  mb={1}
+                  color="whiteAlpha.500"
+                  mt="2px"
                 >
-                  {video.category}
-                </Text>
-                <Text fontFamily="heading" fontSize={{ base: 'xl', md: '2xl' }}>
-                  {video.title}
+                  Duración {video.duration}
                 </Text>
               </Box>
-              <Text fontFamily="heading" fontSize="xl" color="whiteAlpha.700">
-                {video.duration}
-              </Text>
             </Flex>
-          </Box>
+
+            <Flex
+              as="button"
+              onClick={() => setOpen(true)}
+              align="center"
+              gap={2}
+              flexShrink={0}
+              role="group"
+              color="whiteAlpha.800"
+              transition="color 0.3s ease"
+              _hover={{ color: 'brand.brown' }}
+            >
+              <Text
+                fontFamily="condensed"
+                fontSize="xs"
+                letterSpacing="0.24em"
+                textTransform="uppercase"
+              >
+                Ver completo
+              </Text>
+              <Box
+                as={FiArrowRight}
+                fontSize="16px"
+                transition="transform 0.3s ease"
+                _groupHover={{ transform: 'translateX(4px)' }}
+              />
+            </Flex>
+          </Flex>
         </Box>
       </Box>
 
