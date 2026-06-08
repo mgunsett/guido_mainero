@@ -106,7 +106,7 @@ export function PressSection() {
     >
       <Box className="deco-grid" />
       <Box position="relative" zIndex={1}>
-        <SectionHeading eyebrow="En los medios" title="PREN" accent="SA" />
+        <SectionHeading eyebrow="Medios" title="PREN" accent="SA" />
 
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
           {playerData.press.map((item, i) => (

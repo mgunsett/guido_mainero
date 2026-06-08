@@ -145,7 +145,7 @@ export function ContactSection() {
       />
 
       <Box position="relative" zIndex={1}>
-        <SectionHeading eyebrow="Trabajemos juntos" title="CON" accent="TACTO" />
+        <SectionHeading eyebrow="#Redes" title="CONT" accent="ACTO" />
 
         {/* Social media */}
         <Box ref={socialRef} mb={10}>
@@ -159,7 +159,7 @@ export function ContactSection() {
           >
             Redes sociales
           </Text>
-          <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} spacing={4}>
+          <SimpleGrid columns={{ base: 1, sm: 2, lg: 2 }} spacing={4}>
             {playerData.socialMedia.map((s, i) => (
               <SocialCard key={i} item={s} />
             ))}

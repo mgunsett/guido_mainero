@@ -9,18 +9,21 @@ import {
   FaHandshake,
 } from 'react-icons/fa6'
 
+import { IoMdStats } from "react-icons/io";
+
 // ── Imágenes del jugador ──────────────────────────────
 import playerImg from '../assets/perfil1.webp'
 
 // ── Galería ───────────────────────────────────────────
-import g1 from '../assets/gallery/050A0211.webp'
-import g2 from '../assets/gallery/1V3A3421.webp'
-import g3 from '../assets/gallery/1V3A4852.jpg'
-import g4 from '../assets/gallery/1V3A5808.webp'
-import g5 from '../assets/gallery/1V6A5944.webp'
+import g1 from '../assets/gallery/gallery_1.jpg'
+import g2 from '../assets/gallery/gallery_2.jpg'
+import g3 from '../assets/gallery/gallery_3.jpg'
+import g4 from '../assets/gallery/gallery_4.jpg'
+import g5 from '../assets/gallery/gallery_5.jpg'
+import g6 from '../assets/gallery/gallery_6.jpg'
 
 // ── Logos de clubes ───────────────────────────────────
-import platense from '../assets/escudos/escudo_platense.webp'
+import platense from '../assets/escudos/escudo_platense.png'
 import sarmiento from '../assets/escudos/escudo_sarmiento.png'
 import iquique from '../assets/escudos/escudo_iquique.png'
 import defensa from '../assets/escudos/escudo_defensa.png'
@@ -190,8 +193,16 @@ export const playerData = {
       alt: 'Guido Mainero',
       caption: 'Concentración',
       category: 'Partido',
-      aspect: '3/4',
+      aspect: '4/4',
     },
+    {
+      id: 'ph6',
+      src: g6,
+      alt: 'Guido Mainero',
+      caption: 'Sesión de fotos',
+      category: 'Estudio',
+      aspect: '2/4',
+    }
   ],
 
   // Redes sociales
@@ -204,26 +215,13 @@ export const playerData = {
       hoverColor: '#E1306C',
     },
     {
-      label: 'X / Twitter',
-      icon: FaXTwitter,
-      handle: '@guidomainero',
-      url: 'https://x.com',
-      hoverColor: '#ffffff',
-    },
-    {
-      label: 'TikTok',
-      icon: FaTiktok,
-      handle: '@guidomainero',
-      url: 'https://tiktok.com',
-      hoverColor: '#25F4EE',
-    },
-    {
-      label: 'YouTube',
-      icon: FaYoutube,
+      label: 'TransferMark',
+      icon: IoMdStats,
       handle: 'Guido Mainero',
-      url: 'https://youtube.com',
-      hoverColor: '#FF0000',
-    },
+      url: 'https://transfermark.com',
+      hoverColor: '#1f59c4',
+    }
+
   ],
 
   // Contacto profesional + representante

@@ -26,7 +26,7 @@ export function SectionHeading({ eyebrow, title, accent, align = 'left' }) {
       )}
       <Text
         fontFamily="heading"
-        fontSize={{ base: '5xl', md: '7xl' }}
+        fontSize={{ base: '5xl', md: '8xl' }}
         lineHeight={0.95}
         letterSpacing="0.01em"
       >
