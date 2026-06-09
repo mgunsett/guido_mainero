@@ -31,7 +31,7 @@ function SocialCard({ item }) {
         bottom="-20px"
         opacity={0.05}
         transition="all 0.4s ease"
-        _groupHover={{ opacity: 0.18, color: item.hoverColor }}
+        _groupHover={{ opacity: 0.18, color: (item.hoverColor) }}
         color="white"
         pointerEvents="none"
       >
@@ -102,7 +102,7 @@ function ContactRow({ item, gold }) {
           >
             {item.label}
           </Text>
-          <Text fontFamily="body" fontSize="md" fontWeight={500}>
+          <Text fontFamily="heading" fontSize="2xl" fontWeight={500}>
             {item.handle}
           </Text>
         </Box>
@@ -148,7 +148,7 @@ export function ContactSection() {
         <SectionHeading eyebrow="#Redes" title="CONT" accent="ACTO" />
 
         {/* Social media */}
-        <Box ref={socialRef} mb={10}>
+        <Box ref={socialRef} mb={4}>
           <Text
             fontFamily="condensed"
             fontSize="11px"
@@ -167,7 +167,7 @@ export function ContactSection() {
         </Box>
 
         {/* Contacto profesional */}
-        <Box ref={proRef} mb={10}>
+        <Box ref={proRef} mb={4}>
           <Text
             fontFamily="condensed"
             fontSize="11px"
@@ -176,9 +176,9 @@ export function ContactSection() {
             color="whiteAlpha.600"
             mb={5}
           >
-            Contacto profesional
+            Representante Deportivo
           </Text>
-          <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={4}>
+          <Grid templateColumns={{ base: '1fr', md: '1fr' }} gap={4}>
             {professional.map((c, i) => (
               <ContactRow key={i} item={c} />
             ))}
@@ -197,7 +197,7 @@ export function ContactSection() {
           >
             Representante de marketing
           </Text>
-          <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={4}>
+          <Grid templateColumns={{ base: '1fr', md: '1fr' }} gap={4}>
             {representative.map((c, i) => (
               <ContactRow key={i} item={c} gold />
             ))}
