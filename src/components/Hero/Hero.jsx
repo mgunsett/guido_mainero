@@ -69,6 +69,7 @@ export function Hero() {
         fs: { base: '35vw', md: '10vw', lg: '11vw' },
         spacing: { base: '-0.02em', md: '0.3em' },
         m: { base: '-0.02em', md: '0.3em', lg: '210px' },
+        top: { base: '-280px', md: '-220px', lg: '0' },
       },
       {
         text: playerData.fullName.toUpperCase(),
@@ -245,7 +246,7 @@ export function Hero() {
           pointerEvents="none"
         >
           {words.map((w, wi) => (
-            <Flex key={wi} overflow="hidden" lineHeight={0.82}>
+            <Flex key={wi} overflow="hidden" lineHeight={0.82} mt={w.top}>
               {w.text.split('').map((ch, i) => (
                 <Box
                   key={`${wi}-${i}`}
@@ -277,7 +278,7 @@ export function Hero() {
             ref={photoRef}
             src={playerData.image}
             alt={playerData.fullName}
-            h={{ base: '72vh', md: '86vh', lg: '92vh' }}
+            h={{ base: '80vh', md: '86vh', lg: '92vh' }}
             objectFit="contain"
             objectPosition="bottom center"
             sx={{ clipPath: 'inset(100% 0% 0% 0%)' }}
@@ -289,14 +290,14 @@ export function Hero() {
         <Box
           position="absolute"
           left={{ base: 6, md: 12, lg: 20 }}
-          top="50%"
+          top={{ base: "70%", md: "50%", lg: "50%" }}
           transform="translateY(-50%)"
           zIndex={15}
         >
           <HoverFloat intensity={1.2}>
             <Text
               fontFamily="heading"
-              fontSize={{ base: '80px', md: '130px' }}
+              fontSize={{ base: '60px', md: '130px' }}
               lineHeight={0.9}
               color="transparent"
               sx={{ WebkitTextStroke: '2px rgba(156,117,90,0.9)' }}
@@ -304,16 +305,16 @@ export function Hero() {
               {playerData.number}
             </Text>
           </HoverFloat>
-          <Box h="1px" w="80px" bg="brand.brown" mb={3} />
+          <Box h="1px" w={{base:"60px", md: "70px", lg: "80px"}} bg="brand.brown" mb={3} />
           <Flex direction="column" align="flex-start" >
             <HoverFloat intensity={0.6}>
               <Text
                 fontFamily="condensed"
-                fontSize={{ base: '10px', md: 'xs' }}
+                fontSize={{ base: '8px', md: 'xs' }}
                 letterSpacing="0.28em"
                 textTransform="uppercase"
                 color="whiteAlpha.700"
-                mt={2}
+                mt={{ base: 0, md: 2}}
               >
                 {playerData.position}
               </Text>
@@ -321,11 +322,11 @@ export function Hero() {
             <HoverFloat intensity={1.2}>
               <Text
                 fontFamily="condensed"
-                fontSize={{ base: '10px', md: 'xs' }}
+                fontSize={{ base: '8px', md: 'xs' }}
                 letterSpacing="0.2em"
                 textTransform="uppercase"
                 color="brand.brown"
-                mt={1}
+                mt={{ base: 0, md: 1 }}
               >
                 {playerData.nationalityFlag} {playerData.nationality}
               </Text>
@@ -333,7 +334,7 @@ export function Hero() {
           </Flex>
           {/* Club: escudo + nombre inline */}
           <HoverFloat intensity={0.6}>
-          <Flex align="center" gap={2} mt={3}>
+          <Flex align="center" gap={2} mt={{ base: 1, md: 3 }}>
             <Box
               as="img"
               src={playerData.logoCurrentClub}
@@ -372,10 +373,10 @@ export function Hero() {
         <Box
           display={{ base: 'block', lg: 'none' }}
           position="absolute"
-          bottom="56px"
+          bottom="44px"
           left={0}
           right={0}
-          px={6}
+          px={4}
           zIndex={15}
         >
           <MatchBox variant="strip" />
