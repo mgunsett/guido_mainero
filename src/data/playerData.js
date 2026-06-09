@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fa6'
 
 import { IoMdStats } from "react-icons/io";
+import ledsportsLogo from '../assets/LED.webp'
 
 // ── Imágenes del jugador ──────────────────────────────
 import playerImg from '../assets/perfil1.webp'
@@ -160,56 +161,42 @@ export const playerData = {
       id: 'ph1',
       src: g1,
       alt: 'Guido Mainero en acción',
-      caption: 'Final vs River Plate 2025',
-      category: 'Campeones',
       aspect: '3/4',
     },
     {
       id: 'ph2',
       src: g2,
       alt: 'Guido Mainero celebrando',
-      caption: 'Copa Libertadores 2026',
-      category: 'Partido',
       aspect: '3/4',
     },
     {
       id: 'ph3',
       src: g3,
       alt: 'Guido Mainero retrato',
-      caption: 'Liga Argentina 2025',
-      category: 'Partido',
       aspect: '3/4',
     },
     {
       id: 'ph4',
       src: g4,
       alt: 'Guido Mainero entrenamiento',
-      caption: 'Copa Libertadores 2026',
-      category: 'Partido',
       aspect: '3/4',
     },
     {
       id: 'ph5',
       src: g5,
       alt: 'Guido Mainero',
-      caption: 'Copa Argentina 2025',
-      category: 'Partido',
       aspect: '4/4',
     },
     {
       id: 'ph6',
       src: g6,
       alt: 'Guido Mainero',
-      caption: 'Capitán',
-      category: 'Equipo',
       aspect: '2/4',
     },
     {
       id: 'ph7',
       src: g7,
       alt: 'Guido Mainero',
-      caption: 'Liga Argentina 2026',
-      category: 'Partido',
       aspect: '3/4',
     }
   ],
@@ -247,8 +234,8 @@ export const playerData = {
     {
       title: 'Representante',
       label: 'Agencia',
-      icon: FaHandshake,
-      handle: 'LEDSPORTS',
+      image: ledsportsLogo,
+      handle: 'LED SPORTS',
       url: 'https://www.instagram.com/_ledsports/',
       hoverColor: '#C9A84C',
     },

@@ -1,4 +1,4 @@
-import { Box, Flex, Text, SimpleGrid, Grid } from '@chakra-ui/react'
+import { Box, Flex, Text, SimpleGrid, Grid, Image } from '@chakra-ui/react'
 import { playerData } from '../../data/playerData'
 import SectionHeading from '../UI/SectionHeading'
 import { useScrubReveal } from '../../hooks/useScrubReveal'
@@ -80,18 +80,34 @@ function ContactRow({ item, gold }) {
       borderLeftColor={gold ? 'brand.gold' : 'whiteAlpha.100'}
       p={{ base: 5, md: 6 }}
       transition="all 0.3s ease"
+      role="group"
       _hover={{
         transform: 'translateY(-3px)',
         borderColor: gold ? 'brand.gold' : 'rgba(156,117,90,0.5)',
         borderLeftColor: gold ? 'brand.gold' : 'rgba(156,117,90,0.5)',
+ 
       }}
     >
       <Flex align="center" gap={4}>
-        <Box
-          as={Icon}
-          fontSize="22px"
-          color={gold ? 'brand.gold' : 'brand.brown'}
-        />
+        {item.icon && (
+          <Box
+            ml={3}
+            as={Icon}
+            fontSize="40px"
+            color={gold ? 'brand.gold' : 'brand.brown'}
+          />
+        )}
+        {item.image && (
+          <Box boxSize="60px" overflow="hidden" transition="all 0.5s ease" >
+            <Image 
+            src={item.image} 
+            alt={item.label} 
+            w="100%"
+            filter="brightness(0.3)"
+            _groupHover={{ filter: 'brightness(0.9)' }}
+             />
+          </Box>
+        )}
         <Box>
           <Text
             fontFamily="condensed"
