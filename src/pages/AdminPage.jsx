@@ -9,14 +9,17 @@ import {
   Grid,
   GridItem,
   Badge,
+  Spinner,
   useToast,
   IconButton,
 } from '@chakra-ui/react'
-import { FiTrash2, FiEdit2, FiSave, FiX, FiArrowLeft } from 'react-icons/fi'
+import { FiTrash2, FiEdit2, FiSave, FiX, FiArrowLeft, FiLogOut } from 'react-icons/fi'
 import { Link as RouterLink } from 'react-router-dom'
 
 import { supabase, isSupabaseEnabled } from '../lib/supabase'
 import { fallbackMatches } from '../data/matchData'
+import { useAuth } from '../hooks/useAuth'
+import AdminLogin from '../components/Admin/AdminLogin'
 
 const EMPTY = {
   competition: '',
@@ -48,6 +51,7 @@ const STATUS_COLORS = {
 
 export default function AdminPage() {
   const toast = useToast()
+  const { session, loading: authLoading, signIn, signOut } = useAuth()
   const [matches, setMatches] = useState(fallbackMatches)
   const [form, setForm] = useState(EMPTY)
   const [editingId, setEditingId] = useState(null)
@@ -158,6 +162,20 @@ export default function AdminPage() {
     load()
   }
 
+  // ── Guard de acceso ──────────────────────────────
+  // Con Supabase activo el panel requiere sesión. En modo local se omite.
+  if (isSupabaseEnabled && authLoading) {
+    return (
+      <Flex minH="100vh" bg="brand.dark" align="center" justify="center">
+        <Spinner color="brand.brown" size="lg" thickness="2px" />
+      </Flex>
+    )
+  }
+
+  if (isSupabaseEnabled && !session) {
+    return <AdminLogin onSignIn={signIn} />
+  }
+
   return (
     <Box minH="100vh" bg="brand.dark" color="white" py={10} px={{ base: 4, md: 10 }}>
       <Box maxW="1000px" mx="auto">
@@ -165,15 +183,27 @@ export default function AdminPage() {
           <Text fontFamily="heading" fontSize="4xl" letterSpacing="0.04em">
             PANEL DE PARTIDOS
           </Text>
-          <Button
-            as={RouterLink}
-            to="/"
-            variant="piovi"
-            size="sm"
-            leftIcon={<FiArrowLeft />}
-          >
-            Volver
-          </Button>
+          <Flex gap={3}>
+            {isSupabaseEnabled && session && (
+              <Button
+                variant="piovi"
+                size="sm"
+                leftIcon={<FiLogOut />}
+                onClick={signOut}
+              >
+                Cerrar sesión
+              </Button>
+            )}
+            <Button
+              as={RouterLink}
+              to="/"
+              variant="piovi"
+              size="sm"
+              leftIcon={<FiArrowLeft />}
+            >
+              Volver
+            </Button>
+          </Flex>
         </Flex>
 
         {!isSupabaseEnabled && (

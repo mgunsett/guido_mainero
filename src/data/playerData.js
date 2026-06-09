@@ -21,6 +21,7 @@ import g3 from '../assets/gallery/gallery_3.jpg'
 import g4 from '../assets/gallery/gallery_4.jpg'
 import g5 from '../assets/gallery/gallery_5.jpg'
 import g6 from '../assets/gallery/gallery_6.jpg'
+import g7 from '../assets/gallery/gallery_7.jpg'
 
 // ── Logos de clubes ───────────────────────────────────
 import platense from '../assets/escudos/escudo_platense.png'
@@ -121,7 +122,7 @@ export const playerData = {
       title: 'Highlights 2026',
       duration: '0:46',
       thumbnail: g2,
-      cover: g2,
+      cover: g7,
       src: video,
       previewSrc: video,
       category: 'Highlights',
@@ -133,23 +134,23 @@ export const playerData = {
     {
       media: 'Olé',
       logo: '',
-      title: 'La nueva joya del mediocampo argentino',
-      date: '15 Mar 2024',
-      url: '#',
+      title: '"Estuve tocado por la varita. No lo podía creer. Fue soñado. Es el premio para un grupo humilde que soñó en grande”',
+      date: '01 Jun 2025',
+      url: 'https://www.ole.com.ar/platense/mainero-futbol-heroe-leyenda-ascenso-resiliencia-guido-mainero_0_1VMkwKwLAn.html',
     },
     {
       media: 'TyC Sports',
       logo: '',
-      title: 'Guido Mainero, el 10 que ilusiona a los hinchas',
-      date: '02 Feb 2024',
-      url: '#',
+      title: 'El héroe del Platense campeón que sueña con jugar en Racing: ”No tengo preferencia por Boca o River”',
+      date: '11 Feb 2026',
+      url: 'https://www.tycsports.com/racing-club/guido-mainero-platense-campeon-suena-jugar-racing--id712480.html',
     },
     {
-      media: 'ESPN',
+      media: 'CONMEBOL Libertadores',
       logo: '',
-      title: 'Análisis: el talento que pisa el área',
-      date: '20 Dic 2023',
-      url: '#',
+      title: '"Nos propusimos venir a hacer historia. Sabíamos los años que este club llevaba sin perder acá. Pusimos la cara y estuvimos a la altura"',
+      date: '21 Abr 2026',
+      url: 'https://gol.conmebol.com/libertadores/es/news/guido-mainero-el-hombre-de-los-goles-importantes',
     },
   ],
 
@@ -159,15 +160,15 @@ export const playerData = {
       id: 'ph1',
       src: g1,
       alt: 'Guido Mainero en acción',
-      caption: 'En el campo de juego',
-      category: 'Partido',
+      caption: 'Final vs River Plate 2025',
+      category: 'Campeones',
       aspect: '3/4',
     },
     {
       id: 'ph2',
       src: g2,
       alt: 'Guido Mainero celebrando',
-      caption: 'Celebración de gol',
+      caption: 'Copa Libertadores 2026',
       category: 'Partido',
       aspect: '3/4',
     },
@@ -175,23 +176,23 @@ export const playerData = {
       id: 'ph3',
       src: g3,
       alt: 'Guido Mainero retrato',
-      caption: 'Sesión de fotos',
-      category: 'Estudio',
+      caption: 'Liga Argentina 2025',
+      category: 'Partido',
       aspect: '3/4',
     },
     {
       id: 'ph4',
       src: g4,
       alt: 'Guido Mainero entrenamiento',
-      caption: 'Entrenamiento',
-      category: 'Training',
+      caption: 'Copa Libertadores 2026',
+      category: 'Partido',
       aspect: '3/4',
     },
     {
       id: 'ph5',
       src: g5,
       alt: 'Guido Mainero',
-      caption: 'Concentración',
+      caption: 'Copa Argentina 2025',
       category: 'Partido',
       aspect: '4/4',
     },
@@ -199,9 +200,17 @@ export const playerData = {
       id: 'ph6',
       src: g6,
       alt: 'Guido Mainero',
-      caption: 'Sesión de fotos',
-      category: 'Estudio',
+      caption: 'Capitán',
+      category: 'Equipo',
       aspect: '2/4',
+    },
+    {
+      id: 'ph7',
+      src: g7,
+      alt: 'Guido Mainero',
+      caption: 'Liga Argentina 2026',
+      category: 'Partido',
+      aspect: '3/4',
     }
   ],
 

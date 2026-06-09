@@ -214,6 +214,7 @@ export function VideosSection() {
                   w="100%"
                   h="100%"
                   objectFit="cover"
+                  objectPosition="left 50% top 40%"
                   opacity={hovered ? 0 : 1}
                   transition="opacity 0.5s ease, transform 0.6s ease"
                   transform={hovered ? 'scale(1.04)' : 'scale(1)'}
