@@ -451,6 +451,28 @@ export function StatsSection() {
       pb={{ base: 16, md: 24 }}
     >
       <Box className="deco-grid" opacity={0.6} />
+       {/* imagen de fondo tenue, anclada a la derecha */}
+            <Image
+              src={playerData.imageContact}
+              alt=""
+              aria-hidden="true"
+              position="absolute"
+              top="0"
+              right="0"
+              h="100%"
+              w={{ base: '70%', md: '50%', lg: '56%' }}
+              objectFit="cover"
+              objectPosition="top center"
+              opacity={{ base: 0.06, md: 0.1 }}
+              pointerEvents="none"
+              zIndex={0}
+              style={{
+                WebkitMaskImage:
+                  'linear-gradient(to left, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)',
+                maskImage:
+                  'linear-gradient(to left, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)',
+              }}
+            />
       <Box position="relative" zIndex={1}>
         <SectionHeading eyebrow="Ficha Técnica" title="ESTADIS" accent="TICAS" />
 
