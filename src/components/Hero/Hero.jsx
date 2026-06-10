@@ -290,7 +290,7 @@ export function Hero() {
         <Box
           position="absolute"
           left={{ base: 6, md: 12, lg: 20 }}
-          top={{ base: "70%", md: "50%", lg: "50%" }}
+          top={{ base: "62%", md: "50%", lg: "50%" }}
           transform="translateY(-50%)"
           zIndex={15}
         >

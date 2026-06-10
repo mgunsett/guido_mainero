@@ -10,7 +10,7 @@ const colors = {
     brown: '#9c755a', // color principal de marca
     brownDark: '#70533f', // hover del principal
     brownLight: '#b5744e', // variante clara (gradientes)
-    gold: '#C9A84C', // acento dorado (trofeos, representante)
+    gold: '#c9a84cc0', // acento dorado (trofeos, representante)
     dark: '#080C12', // fondo global
     gray: '#8A8F9E',
     bone: '#F5F0E8',

@@ -28,14 +28,14 @@ function SocialCard({ item }) {
       <Box
         position="absolute"
         right="-10px"
-        bottom="-20px"
+        bottom="-40px"
         opacity={0.05}
         transition="all 0.4s ease"
         _groupHover={{ opacity: 0.18, color: (item.hoverColor) }}
         color="white"
         pointerEvents="none"
       >
-        <Box as={Icon} fontSize="140px" />
+        <Box as={Icon} fontSize="180px" />
       </Box>
       <Box position="relative">
         <Box
@@ -76,16 +76,15 @@ function ContactRow({ item, gold }) {
       bg="rgba(255,255,255,0.02)"
       border="1px solid"
       borderColor="whiteAlpha.100"
-      borderLeft={gold ? '3px solid' : '1px solid'}
-      borderLeftColor={gold ? 'brand.gold' : 'whiteAlpha.100'}
-      p={{ base: 5, md: 6 }}
+      borderLeftColor= {gold ? 'brand.gold' : 'rgba(156,117,90,0.5)'}  
+      borderLeftWidth= '4px'
+      borderLeftStyle= 'solid'
+      p={{ base: 5, md: 8 }}
       transition="all 0.3s ease"
       role="group"
       _hover={{
         transform: 'translateY(-3px)',
         borderColor: gold ? 'brand.gold' : 'rgba(156,117,90,0.5)',
-        borderLeftColor: gold ? 'brand.gold' : 'rgba(156,117,90,0.5)',
- 
       }}
     >
       <Flex align="center" gap={4}>
@@ -94,7 +93,9 @@ function ContactRow({ item, gold }) {
             ml={3}
             as={Icon}
             fontSize="40px"
-            color={gold ? 'brand.gold' : 'brand.brown'}
+            color='brand.brown'
+            opacity={0.4}
+            _groupHover={{ opacity: 1, color: 'rgba(156,117,90,0.5)' }}
           />
         )}
         {item.image && (
@@ -104,11 +105,14 @@ function ContactRow({ item, gold }) {
             alt={item.label} 
             w="100%"
             filter="brightness(0.3)"
-            _groupHover={{ filter: 'brightness(0.9)' }}
+            transition="all 0.3s ease"
+            _groupHover={{ 
+              filter: 'brightness(0.9)',
+             }}
              />
           </Box>
         )}
-        <Box>
+        <Box ml={gold ? '8px' : '16px'}>
           <Text
             fontFamily="condensed"
             fontSize="10px"

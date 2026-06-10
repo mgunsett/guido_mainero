@@ -44,7 +44,6 @@ export function VideosSection() {
   const headerRef = useScrubReveal({ y: 30 })
   const wrapRef = useRef(null)
   const revealRef = useRef(null)
-  const previewRef = useRef(null)
   const [hovered, setHovered] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -75,18 +74,6 @@ export function VideosSection() {
     })
     return () => ctx.revert()
   }, [])
-
-  // hover preview
-  useEffect(() => {
-    const v = previewRef.current
-    if (!v) return
-    if (hovered) {
-      v.currentTime = 0
-      v.play().catch(() => {})
-    } else {
-      v.pause()
-    }
-  }, [hovered])
 
   // cerrar con Escape
   useEffect(() => {
@@ -219,22 +206,26 @@ export function VideosSection() {
                   transition="opacity 0.5s ease, transform 0.6s ease"
                   transform={hovered ? 'scale(1.04)' : 'scale(1)'}
                 />
-                {/* preview muted */}
-                <Box
-                  ref={previewRef}
-                  as="video"
-                  src={video.previewSrc}
-                  muted
-                  loop
-                  playsInline
-                  position="absolute"
-                  inset={0}
-                  w="100%"
-                  h="100%"
-                  objectFit="cover"
-                  opacity={hovered ? 1 : 0}
-                  transition="opacity 0.5s ease"
-                />
+                {/* preview YouTube (muted, autoplay al hover) */}
+                {hovered && (
+                  <Box
+                    as="iframe"
+                    src="https://www.youtube.com/embed/TG8DeRDFDUA?autoplay=1&mute=1&loop=1&playlist=TG8DeRDFDUA&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0"
+                    title={video.title}
+                    allow="autoplay; encrypted-media"
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    border="none"
+                    pointerEvents="none"
+                    sx={{
+                      transform: 'translate(-50%, -50%)',
+                      minWidth: '100%',
+                      minHeight: '100%',
+                      aspectRatio: '16 / 9',
+                    }}
+                  />
+                )}
                 {/* overlay */}
                 <Box
                   position="absolute"
@@ -582,11 +573,13 @@ export function VideosSection() {
             >
               <AspectRatio ratio={16 / 9}>
                 <Box
-                  as="video"
-                  src={video.src}
-                  controls
-                  autoPlay
-                  playsInline
+                  as="iframe"
+                  src="https://www.youtube.com/embed/TG8DeRDFDUA?autoplay=1&rel=0"
+                  title="Compacto Guido Mainero 2025"
+                  border="none"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
                   w="100%"
                   h="100%"
                 />

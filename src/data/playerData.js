@@ -16,23 +16,23 @@ import ledsportsLogo from '../assets/LED.webp'
 import playerImg from '../assets/perfil1.webp'
 
 // ── Galería ───────────────────────────────────────────
-import g1 from '../assets/gallery/gallery_1.jpg'
-import g2 from '../assets/gallery/gallery_2.jpg'
-import g3 from '../assets/gallery/gallery_3.jpg'
-import g4 from '../assets/gallery/gallery_4.jpg'
-import g5 from '../assets/gallery/gallery_5.jpg'
-import g6 from '../assets/gallery/gallery_6.jpg'
-import g7 from '../assets/gallery/gallery_7.jpg'
+import g1 from '../assets/gallery/gallery_1.webp'
+import g2 from '../assets/gallery/gallery_2.webp'
+import g3 from '../assets/gallery/gallery_3.webp'
+import g4 from '../assets/gallery/gallery_4.webp'
+import g5 from '../assets/gallery/gallery_5.webp'
+import g6 from '../assets/gallery/gallery_6.webp'
+import g7 from '../assets/gallery/gallery_7.webp'
 
 // ── Logos de clubes ───────────────────────────────────
-import platense from '../assets/escudos/escudo_platense.png'
-import sarmiento from '../assets/escudos/escudo_sarmiento.png'
-import iquique from '../assets/escudos/escudo_iquique.png'
-import defensa from '../assets/escudos/escudo_defensa.png'
-import velez from '../assets/escudos/escudo_velez.png'
+import platense from '../assets/escudos/escudo_platense.webp'
+import sarmiento from '../assets/escudos/escudo_sarmiento.webp'
+import iquique from '../assets/escudos/escudo_iquique.webp'
+import defensa from '../assets/escudos/escudo_defensa.webp'
+import velez from '../assets/escudos/escudo_velez.webp'
 import instituto from '../assets/escudos/escudo_instituto.webp'
 // ── Videos ────────────────────────────────────────────
-import video from '../assets/videos/video_highlight.mp4'
+//import video from '../assets/videos/video_highlight.mp4'
 
 export const playerData = {
   name: 'GUIDO',
@@ -124,8 +124,6 @@ export const playerData = {
       duration: '0:46',
       thumbnail: g2,
       cover: g7,
-      src: video,
-      previewSrc: video,
       category: 'Highlights',
     },
   ],
@@ -226,8 +224,8 @@ export const playerData = {
       title: 'Contacto profesional',
       label: 'Contacto',
       icon: FaEnvelope,
-      handle: '@RepresentanteDeportivo',
-      url: '#',
+      handle: 'IMPACTO DEPORTIVO',
+      url: 'https://www.instagram.com/impactodeportivoagency/?hl=es-la',
       hoverColor: '#9c755a',
     },
     
