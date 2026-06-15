@@ -4,7 +4,7 @@ import SectionHeading from '../UI/SectionHeading'
 import { useScrubReveal } from '../../hooks/useScrubReveal'
 
 function SocialCard({ item }) {
-  const Icon = item.icon
+  const Icon = item.iconBg
   return (
     <Box
       as="a"
@@ -38,6 +38,7 @@ function SocialCard({ item }) {
         <Box as={Icon} fontSize="180px" />
       </Box>
       <Box position="relative">
+        {item.icon && (
         <Box
           as={Icon}
           fontSize="28px"
@@ -46,6 +47,19 @@ function SocialCard({ item }) {
           transition="color 0.3s ease"
           _groupHover={{ color: item.hoverColor }}
         />
+        )}
+        {item.image && (
+          <Image
+          src={item.image}
+          w={'30px'}
+          h={'30px'}
+          mb={6}
+          filter="brightness(0.3)"
+          color="whiteAlpha.700"
+          transition="all 0.3s ease"
+          _groupHover={{ color: item.hoverColor, filter:"brightness(0.9)"}}
+        />
+        )}
         <Text
           fontFamily="condensed"
           fontSize="10px"
@@ -95,7 +109,7 @@ function ContactRow({ item, gold }) {
             fontSize="40px"
             color='brand.brown'
             opacity={0.4}
-            _groupHover={{ opacity: 1, color: 'rgba(156,117,90,0.5)' }}
+            _groupHover={{ opacity: 1, color: 'rgba(156, 118, 90, 0.66)' }}
           />
         )}
         {item.image && (

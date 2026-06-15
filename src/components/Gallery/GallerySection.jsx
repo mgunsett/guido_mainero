@@ -278,6 +278,7 @@ function Lightbox({ images, activeIndex, onClose, onPrev, onNext, isMobile }) {
               <img
                 src={item.src}
                 alt={item.alt}
+                loading="lazy"
                 style={{
                   maxWidth: '100%',
                   maxHeight: '68vh',
@@ -340,6 +341,7 @@ function Lightbox({ images, activeIndex, onClose, onPrev, onNext, isMobile }) {
             <img
               src={prevItem.src}
               alt=""
+              loading="lazy"
               style={{
                 width: '100%',
                 height: '100%',
@@ -443,6 +445,7 @@ function Lightbox({ images, activeIndex, onClose, onPrev, onNext, isMobile }) {
             <img
               src={nextItem.src}
               alt=""
+              loading="lazy"
               style={{
                 width: '100%',
                 height: '100%',

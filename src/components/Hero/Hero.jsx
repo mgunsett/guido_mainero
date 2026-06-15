@@ -283,6 +283,7 @@ export function Hero() {
             objectPosition="bottom center"
             sx={{ clipPath: 'inset(100% 0% 0% 0%)' }}
             draggable={false}
+            loading="lazy"
           />
          </Flex>
 

@@ -11,6 +11,7 @@ import {
 
 import { IoMdStats } from "react-icons/io";
 import ledsportsLogo from '../assets/LED.webp'
+import transfermkt from '../assets/transfermkt.webp'
 
 // ── Imágenes del jugador ──────────────────────────────
 import playerImg from '../assets/perfil1.webp'
@@ -234,13 +235,15 @@ export const playerData = {
     {
       label: 'Instagram',
       icon: FaInstagram,
+      iconBg: FaInstagram,
       handle: '@guidomainero',
       url: 'https://www.instagram.com/guidomainero/?hl=es',
       hoverColor: '#e42d6a',
     },
     {
       label: 'TransferMarkt',
-      icon: IoMdStats,
+      image: transfermkt,
+      iconBg: IoMdStats,
       handle: 'Guido Mainero',
       url: 'https://www.transfermarkt.com.ar/guido-mainero/profil/spieler/441270',
       hoverColor: '#1f59c4',
@@ -271,10 +274,10 @@ export const playerData = {
 
   // ─── MARQUEE DATA ────────────────────────────────────────────────
   marqueeItems: [
-    'CLUB ATLETICO PLATENSE', '·', 'DELANTERO', '·', 'CORDOBA', '·', 'ARGENTINA', '·',
-    '#7', '·', 'LIGA ARGENTINA', '·', 'ZURDO', '·', '1.77m', '·',
-    'CLUB ATLETICO PLATENSE', '·', 'DELANTERO', '·', 'CORDOBA', '·', 'ARGENTINA', '·',
-    '#7', '·', 'LIGA ARGENTINA', '·', 'ZURDO', '·', '1.77m', '·',
+    'CLUB ATLETICO PLATENSE', '◊', 'GUIDO MAINERO', '◊',  'DELANTERO', '◊', 'CORDOBA', '◊', 'ARGENTINA', '◊',
+    '#7', '◊', 'LIGA ARGENTINA', '◊', 'ZURDO', '◊', '1.77m', '◊',
+    'CLUB ATLETICO PLATENSE', '◊','GUIDO MAINERO', '◊', 'DELANTERO', '◊', 'CORDOBA', '◊', 'ARGENTINA', '◊',
+    '#7', '◊', 'LIGA ARGENTINA', '◊', 'ZURDO', '◊', '1.77m', '◊',
   ],
 }
 
