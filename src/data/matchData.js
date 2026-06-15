@@ -17,24 +17,13 @@ export const fallbackMatches = [
   {
     id: 'm1',
     competition: 'Liga Profesional',
-    home_team: 'Club Atlético',
-    away_team: 'Rival FC',
+    home_team: 'C.A Platense',
+    away_team: '-',
     home_score: null,
     away_score: null,
     match_date: '2026-06-14T20:00:00',
     status: 'upcoming',
-    venue: 'Estadio Monumental',
-  },
-  {
-    id: 'm2',
-    competition: 'Copa Nacional',
-    home_team: 'Visitante United',
-    away_team: 'Club Atlético',
-    home_score: 1,
-    away_score: 3,
-    match_date: '2026-05-28T18:30:00',
-    status: 'finished',
-    venue: 'Estadio Sur',
+    venue: 'Estadio Ciudad de Vicente López',
   },
 ]
 

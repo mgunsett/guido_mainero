@@ -362,7 +362,7 @@ export function Hero() {
           display={{ base: 'none', lg: 'block' }}
           position="absolute"
           right={20}
-          top="50%"
+          top="60%"
           transform="translateY(-50%)"
           zIndex={15}
         >
@@ -373,10 +373,10 @@ export function Hero() {
         <Box
           display={{ base: 'block', lg: 'none' }}
           position="absolute"
-          bottom="44px"
+          bottom="24px"
           left={0}
           right={0}
-          px={4}
+          px={1}
           zIndex={15}
         >
           <MatchBox variant="strip" />
@@ -388,7 +388,9 @@ export function Hero() {
         </Box>
 
         {/* ── Marquee bottom (z=18) ── */}
-        <MarqueeBar />
+        <Box display={{ base: 'none', lg: 'block' }}>
+          <MarqueeBar />
+        </Box>
 
         {/* Noise overlay (z=22) */}
         <Box className="noise-overlay" zIndex={22} />
