@@ -14,6 +14,7 @@ import ledsportsLogo from '../assets/LED.webp'
 
 // ── Imágenes del jugador ──────────────────────────────
 import playerImg from '../assets/perfil1.webp'
+import fondoContact from '../assets/fondoContact.svg'
 
 // ── Galería ───────────────────────────────────────────
 import g1 from '../assets/gallery/gallery_1.webp'
@@ -23,6 +24,10 @@ import g4 from '../assets/gallery/gallery_4.webp'
 import g5 from '../assets/gallery/gallery_5.webp'
 import g6 from '../assets/gallery/gallery_6.webp'
 import g7 from '../assets/gallery/gallery_7.webp'
+import g8 from '../assets/gallery/gallery_8.webp'
+import g9 from '../assets/gallery/gallery_9.webp'
+import g10 from '../assets/gallery/gallery_10.webp'
+import g11 from '../assets/gallery/gallery_11.webp'
 
 // ── Logos de clubes ───────────────────────────────────
 import platense from '../assets/escudos/escudo_platense.webp'
@@ -51,6 +56,7 @@ export const playerData = {
   currentClub: 'C.A Platense',
   logoCurrentClub: platense,
   image: playerImg,
+  imageContact: fondoContact,
 
   // Barras técnicas (0-100)
   stats: [
@@ -194,6 +200,30 @@ export const playerData = {
     {
       id: 'ph7',
       src: g7,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph8',
+      src: g8,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph9',
+      src: g9,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph10',
+      src: g10,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph11',
+      src: g11,
       alt: 'Guido Mainero',
       aspect: '3/4',
     }
