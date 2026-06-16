@@ -89,6 +89,12 @@ export const playerData = {
       titles: ['Liga Apertura 2025'],
     },
     {
+      name: 'Instituto de Córdoba',
+      country: 'Argentina',
+      years: '2024',
+      escudo: instituto,
+    },
+    {
       name: 'Sarmiento de Junín',
       country: 'Argentina',
       years: '2021 — 2023',
@@ -257,8 +263,8 @@ export const playerData = {
       title: 'Contacto profesional',
       label: 'Contacto',
       icon: FaEnvelope,
-      handle: 'IMPACTO DEPORTIVO',
-      url: 'https://www.instagram.com/impactodeportivoagency/?hl=es-la',
+      handle: 'Corner Football Agency',
+      url: 'https://www.instagram.com/cornerfootballagency',
       hoverColor: '#9c755a',
     },
     
