@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /AdminPage
 
-Sitemap: https://guidomainero.vercel.app/sitemap.xml
+Sitemap: https://guidomainero.com/sitemap.xml
 
 # Crawl delay
 Crawl-delay: 1
