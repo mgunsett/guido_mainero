@@ -6,7 +6,7 @@ import { playerData } from '../../data/playerData'
 import SectionHeading from '../UI/SectionHeading'
 
 // ─── HELPERS ─────────────────────────────────────────────────────
-const SLIDE_W_MD = '48vw' // ancho slide central desktop
+const SLIDE_W_MD = '40vw' // ancho slide central desktop
 const SLIDE_W_BASE = '82vw' // ancho slide central mobile
 const SLIDE_H_MD = '62vh'
 const SLIDE_H_BASE = '52vh'
@@ -25,10 +25,11 @@ function ArrowBtn({ direction, onClick }) {
       justifyContent="center"
       w={{ base: '48px', md: '48px' }}
       h={{ base: '48px', md: '48px' }}
-      border="1px solid rgba(255,255,255,0.12)"
+      py={2}
+      px={'5px'}
       bg="rgba(255,255,255,0.04)"
       color="white"
-      fontSize={{ base: '22px', md: '26px' }}
+      fontSize={{ base: '22px', md: '20px' }}
       cursor="pointer"
       transition="all 0.25s ease"
       _hover={{
@@ -39,7 +40,7 @@ function ArrowBtn({ direction, onClick }) {
       _focus={{ outline: 'none' }}
       aria-label={direction === 'prev' ? 'Anterior' : 'Siguiente'}
     >
-      {direction === 'prev' ? '←' : '→'}
+      {direction === 'prev' ? '⟨' : '⟩'}
     </Box>
   )
 }
@@ -327,7 +328,7 @@ function Lightbox({ images, activeIndex, onClose, onPrev, onNext, isMobile }) {
           <div
             style={{
               flexShrink: 0,
-              width: 'clamp(70px,13vw,200px)',
+              width: 'clamp(70px,13vw,180px)',
               height: '52vh',
               position: 'relative',
               overflow: 'hidden',

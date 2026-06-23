@@ -444,11 +444,15 @@ export function StatsSection() {
       position="relative"
       zIndex={20}
       bg="#0A0E16"
-      borderTopRadius="22px"
-      boxShadow="0 -30px 60px rgba(0,0,0,0.6)"
       px={{ base: 6, md: 12, lg: 20 }}
-      pt={{ base: 20, md: 28 }}
+      pt={{ base: 24, md: 36 }}
       pb={{ base: 16, md: 24 }}
+      sx={{
+        WebkitMaskImage:
+          'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 140px)',
+        maskImage:
+          'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 140px)',
+      }}
     >
       <Box className="deco-grid" opacity={0.6} />
        {/* imagen de fondo tenue, anclada a la derecha */}
@@ -460,10 +464,10 @@ export function StatsSection() {
               top="0"
               right="0"
               h="100%"
-              w={{ base: '70%', md: '50%', lg: '56%' }}
+              w={{ base: '60%', md: '50%', lg: '56%' }}
               objectFit="cover"
               objectPosition="top center"
-              opacity={{ base: 0.06, md: 0.1 }}
+              opacity={{ base: 0.09, md: 0.1 }}
               pointerEvents="none"
               zIndex={0}
               style={{

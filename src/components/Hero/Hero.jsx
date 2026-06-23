@@ -388,10 +388,21 @@ export function Hero() {
           <ScrollIndicator />
         </Box>
 
-        {/* ── Marquee bottom (z=18) ── */}
-        <Box display={{ base: 'none', lg: 'block' }}>
-          <MarqueeBar />
-        </Box>
+        {/* ── Fade de unión con la sección Stats (z=20) ──
+            Disuelve la base del Hero hacia el color exacto del panel de
+            Stats (#0A0E16). Al deslizarse Stats hacia arriba sobre el Hero,
+            su borde superior enmascarado calza con este degradado y la
+            costura entre secciones desaparece por completo. */}
+        <Box
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}
+          h={{ base: '180px', md: '240px', lg: '300px' }}
+          zIndex={20}
+          pointerEvents="none"
+          background="linear-gradient(to bottom, transparent 0%, rgba(10,14,22,0.55) 55%, #0A0E16 100%)"
+        />
 
         {/* Noise overlay (z=22) */}
         <Box className="noise-overlay" zIndex={22} />
@@ -451,61 +462,6 @@ function ScrollIndicator() {
         Scroll
       </span>
     </motion.div>
-  )
-}
-
-function MarqueeBar() {
-  const trackRef = useRef(null)
-
-  useEffect(() => {
-    const el = trackRef.current
-    if (!el) return
-    const anim = gsap.to(el, {
-      x: () => -el.scrollWidth / 2,
-      duration: 25,
-      ease: 'none',
-      repeat: -1,
-    })
-    return () => anim.kill()
-  }, [])
-
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 18,
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(156,117,90,0.08)',
-        backdropFilter: 'blur(8px)',
-        padding: '10px 0',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        ref={trackRef}
-        style={{ display: 'flex', whiteSpace: 'nowrap', willChange: 'transform' }}
-      >
-        {[...playerData.marqueeItems, ...playerData.marqueeItems].map((item, i) => (
-          <span
-            key={i}
-            style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontWeight: item === '·' ? 300 : 600,
-              fontSize: '12px',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: item === '·' ? '#9c755a' : 'rgba(255,255,255,0.48)',
-              marginRight: '24px',
-            }}
-          >
-            {item}
-          </span>
-        ))}
-      </div>
-    </div>
   )
 }
 
