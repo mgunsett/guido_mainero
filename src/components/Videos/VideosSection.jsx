@@ -210,7 +210,7 @@ export function VideosSection() {
                 {hovered && (
                   <Box
                     as="iframe"
-                    src="https://www.youtube.com/embed/TG8DeRDFDUA?autoplay=1&mute=1&loop=1&playlist=TG8DeRDFDUA&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0"
+                    src="https://www.youtube.com/embed/rxANUne9Bzg?autoplay=1&mute=1&loop=1&playlist=rxANUne9Bzg&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0"
                     title={video.title}
                     allow="autoplay; encrypted-media"
                     position="absolute"
@@ -574,8 +574,8 @@ export function VideosSection() {
               <AspectRatio ratio={16 / 9}>
                 <Box
                   as="iframe"
-                  src="https://www.youtube.com/embed/TG8DeRDFDUA?autoplay=1&rel=0"
-                  title="Compacto Guido Mainero 2025"
+                  src="https://www.youtube.com/embed/rxANUne9Bzg?autoplay=1&rel=0"
+                  title="COMPACTO GUIDO MAINERO 2026"
                   border="none"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
