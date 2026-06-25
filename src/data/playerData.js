@@ -84,7 +84,7 @@ export const playerData = {
     {
       name: 'C.A Platense',
       country: 'Liga Argentina',
-      years: '2023 — Actualidad',
+      years: '2024 — Actualidad',
       escudo: platense,
       titles: ['Liga Apertura 2025'],
     },
