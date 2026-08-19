@@ -57,7 +57,7 @@ createRoot(document.getElementById('root')).render(
               </SmoothScrollProvider>
             }
           />
-          <Route path="/AdminPage" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

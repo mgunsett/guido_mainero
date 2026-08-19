@@ -122,7 +122,7 @@ export function PressSection() {
         </SimpleGrid>
       </Box>
 
-      {/* Marquee de logos */}
+      {/* Marquee de logos
       <Box mt={{ base: 16, md: 24 }} overflow="hidden" position="relative" zIndex={1}>
         <MotionFlex
           display="flex"
@@ -148,7 +148,7 @@ export function PressSection() {
             </Text>
           ))}
         </MotionFlex>
-      </Box>
+      </Box> */}
     </Box>
   )
 }

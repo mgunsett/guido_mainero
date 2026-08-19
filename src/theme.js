@@ -13,6 +13,10 @@ const colors = {
     gold: '#c9a84cc0', // acento dorado (trofeos, representante)
     dark: '#080C12', // fondo global
     gray: '#8A8F9E',
+    gray2: '#5A6070', // gris apagado (labels secundarios del panel)
+    amber: '#C9A84C', // acento del panel /AdminPage
+    amberLight: '#E0C475',
+    dorado: '#9c755a',
     bone: '#F5F0E8',
     boneWarm: '#EDE8DC',
   },

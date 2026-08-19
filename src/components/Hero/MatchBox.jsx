@@ -1,29 +1,5 @@
-import { Box, Flex, Text, Divider } from '@chakra-ui/react'
+import { Box, Flex, Text, Image, Divider } from '@chakra-ui/react'
 import { useMatches } from '../../hooks/useMatches'
-
-function formatDate(iso) {
-  try {
-    const d = new Date(iso)
-    return d.toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: 'short',
-    })
-  } catch {
-    return ''
-  }
-}
-
-function formatTime(iso) {
-  try {
-    const d = new Date(iso)
-    return d.toLocaleTimeString('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return ''
-  }
-}
 
 const STATUS_LABEL = {
   upcoming: 'Próximo',
@@ -33,8 +9,57 @@ const STATUS_LABEL = {
 
 const STATUS_ORDER = { live: 0, upcoming: 1, finished: 2 }
 
+/**
+ * Escudo del equipo. Cuando falta la imagen se reserva el mismo espacio
+ * para que las dos filas del partido queden alineadas.
+ */
+function Shield({ src, name, size }) {
+  if (!src) return <Box boxSize={size} flexShrink={0} />
+  return (
+    <Image
+      src={src}
+      alt={name}
+      boxSize={size}
+      objectFit="contain"
+      flexShrink={0}
+      loading="lazy"
+    />
+  )
+}
+
+function TeamRow({ team, score, showScore, showShield, shieldSize, isStrip, mt }) {
+  return (
+    <Flex align="center" justify="space-between" gap={{ base: 2, md: 4 }} mt={mt}>
+      <Flex align="center" gap={{ base: 1.5, md: 2 }} minW={0}>
+        {showShield && <Shield src={team.shield} name={team.name} size={shieldSize} />}
+        <Text
+          fontFamily="condensed"
+          fontSize={isStrip ? 'xs' : 'lg'}
+          fontWeight={600}
+          noOfLines={1}
+          color={'brand.brown'}
+        >
+          {team.name}
+        </Text>
+      </Flex>
+      {showScore && (
+        <Text fontFamily="heading" fontSize={isStrip ? 'md' : '2xl'} color="white">
+          {score}
+        </Text>
+      )}
+    </Flex>
+  )
+}
+
 function MatchCard({ match, isStrip }) {
-  const isFinished = match.status === 'finished'
+  // El marcador manda sobre el status: si hay goles cargados se muestra el
+  // resultado, si no la fecha y hora del partido.
+  const showScore = match.homeScore !== null && match.awayScore !== null
+  const showShield = Boolean(match.home.shield || match.away.shield)
+  const shieldSize = isStrip ? { base: '14px', md: '18px' } : '22px'
+  // Fecha y hora se cargan a mano desde el panel y se muestran tal cual.
+  const dateLabel = match.dateLabel
+  const timeLabel = match.timeLabel
 
   return (
     <Box
@@ -92,36 +117,30 @@ function MatchCard({ match, isStrip }) {
         direction={isStrip ? 'row' : 'column'}
         gap={isStrip ? 1 : 2}
       >
-        <Flex 
+        <Flex
         direction={'column'}
-        flex={isStrip ? '1' : 'none'} 
+        flex={isStrip ? '1' : 'none'}
         w={isStrip ? 'auto' : '100%'}
-        gap={isFinished ? '0px' : '7px'}
+        minW={0}
+        gap={showScore ? '0px' : '7px'}
         >
-          <Flex align="center" justify="space-between" gap={{base: 2, md: 4}}>
-            <Text 
-            fontFamily="condensed" 
-            fontSize={isStrip ? 'xs' : "md"} 
-            fontWeight={600} 
-            noOfLines={1}>
-              {match.home_team}
-            </Text>
-            {isFinished && (
-              <Text fontFamily="heading" fontSize={isStrip ? 'md' : "2xl"} color="white">
-                {match.home_score}
-              </Text>
-            )}
-          </Flex>
-          <Flex align="center" justify="space-between" gap={4} mt={1}>
-            <Text fontFamily="condensed" fontSize={isStrip ? 'xs' : "md"}  fontWeight={600} noOfLines={1}>
-              {match.away_team}
-            </Text>
-            {isFinished && (
-              <Text fontFamily="heading" fontSize={isStrip ? 'md' : "2xl"} color="white">
-                {match.away_score}
-              </Text>
-            )}
-          </Flex>
+          <TeamRow
+            team={match.home}
+            score={match.homeScore}
+            showScore={showScore}
+            showShield={showShield}
+            shieldSize={shieldSize}
+            isStrip={isStrip}
+          />
+          <TeamRow
+            team={match.away}
+            score={match.awayScore}
+            showScore={showScore}
+            showShield={showShield}
+            shieldSize={shieldSize}
+            isStrip={isStrip}
+            mt={1}
+          />
         </Flex>
 
         {!isStrip && <Divider borderColor="whiteAlpha.100" />}
@@ -133,25 +152,25 @@ function MatchCard({ match, isStrip }) {
           w={isStrip ? 'auto' : '100%'}
           gap={1}
         >
-          {!isFinished && (
+          {!showScore && dateLabel && (
           <Text
             fontFamily="condensed"
-            fontSize={isStrip ? 'xs' : "md"} 
+            fontSize={isStrip ? 'xs' : "md"}
             letterSpacing="0.16em"
             textTransform="uppercase"
             color="whiteAlpha.700"
           >
-            {formatDate(match.match_date)}
+            {dateLabel}
           </Text>
           )}
-          {!isFinished && (
+          {!showScore && timeLabel && (
             <Text
               fontFamily="heading"
               fontSize={isStrip ? 'xs' : "lg"}
               color="brand.brown"
               letterSpacing="0.04em"
             >
-              {formatTime(match.match_date)}
+              {timeLabel}
             </Text>
           )}
         </Flex>
@@ -193,7 +212,6 @@ export function MatchBox({ variant = 'float' }) {
       direction={isStrip ? 'row' : "column"}
       gap={isStrip ? 0 : 1}
       w={isStrip ? '100%' : { base: 'auto', lg: '290px' }}
-      // h={isStrip ? '100%' : { base: 'auto', lg: '20px' }}
     >
       {sorted.map((match) => (
         <MatchCard key={match.id} match={match} isStrip={isStrip} />
