@@ -398,7 +398,7 @@ export function Hero() {
           bottom={0}
           left={0}
           right={0}
-          h={{ base: '180px', md: '240px', lg: '300px' }}
+          h={{ base: '40px', md: '240px', lg: '300px' }}
           zIndex={20}
           pointerEvents="none"
           background="linear-gradient(to bottom, transparent 0%, rgba(10,14,22,0.55) 55%, #0A0E16 100%)"

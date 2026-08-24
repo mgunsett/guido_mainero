@@ -29,6 +29,11 @@ import g8 from '../assets/gallery/gallery_8.webp'
 import g9 from '../assets/gallery/gallery_9.webp'
 import g10 from '../assets/gallery/gallery_10.webp'
 import g11 from '../assets/gallery/gallery_11.webp'
+import g12 from '../assets/gallery/gallery_12.webp'
+import g13 from '../assets/gallery/gallery_13.webp'
+import g14 from '../assets/gallery/gallery_14.webp'
+import g15 from '../assets/gallery/gallery_15.webp'
+import g16 from '../assets/gallery/gallery_16.webp'
 
 // ── Logos de clubes ───────────────────────────────────
 import platense from '../assets/escudos/escudo_platense.webp'
@@ -168,6 +173,36 @@ export const playerData = {
 
   // Galería
   gallery: [
+    {
+      id: 'ph12',
+      src: g12,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph13',
+      src: g13,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    { 
+      id: 'ph14',
+      src: g14,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph15',
+      src: g15,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
+    {
+      id: 'ph16',
+      src: g16,
+      alt: 'Guido Mainero',
+      aspect: '3/4',
+    },
     {
       id: 'ph1',
       src: g1,

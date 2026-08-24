@@ -9,10 +9,6 @@ const STATUS_LABEL = {
 
 const STATUS_ORDER = { live: 0, upcoming: 1, finished: 2 }
 
-/**
- * Escudo del equipo. Cuando falta la imagen se reserva el mismo espacio
- * para que las dos filas del partido queden alineadas.
- */
 function Shield({ src, name, size }) {
   if (!src) return <Box boxSize={size} flexShrink={0} />
   return (
@@ -112,9 +108,9 @@ function MatchCard({ match, isStrip }) {
       </Flex>
 
       <Flex
-        align="center"
+        align={{ base: 'flex-start', md: 'center' }}
         justify="space-between"
-        direction={isStrip ? 'row' : 'column'}
+        direction={isStrip ? 'column' : 'column'}
         gap={isStrip ? 1 : 2}
       >
         <Flex
