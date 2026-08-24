@@ -434,10 +434,6 @@ function ClubsTimeline() {
 
 export function StatsSection() {
   return (
-    // El desplazamiento −100vh que hace que esta sección suba sobre el
-    // Hero pinneado vive en el wrapper de App.jsx (no aquí), para que el
-    // "cover phase" del Hero (100vh) calce 1:1. Acá solo el look de panel:
-    // fondo sólido, esquinas superiores redondeadas y sombra hacia arriba.
     <Box
       as="section"
       id="stats"
@@ -558,7 +554,7 @@ export function StatsSection() {
               color="whiteAlpha.600"
               mb={5}
             >
-              Última temporada
+              Temporada '25 / '26
             </Text>
             <SimpleGrid columns={2} spacing={4}>
               {playerData.seasonStats.map((s, i) => (
