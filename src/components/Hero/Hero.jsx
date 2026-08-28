@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import { playerData } from '../../data/playerData'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import MatchBox from './MatchBox'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -12,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 // ── HoverFloat: tilt 3D en hover (rotateX/Y con GSAP) ──
 // ─── HOVER FLOAT ─────────────────────────────────────────────────
-function HoverFloat({ children, intensity = 1 }) {
+function HoverFloat({ children, intensity = 1, disabled = false }) {
   const ref = useRef(null)
 
   const onMove = (e) => {
@@ -43,8 +44,8 @@ function HoverFloat({ children, intensity = 1 }) {
   return (
     <div
       ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      onMouseMove={disabled ? undefined : onMove}
+      onMouseLeave={disabled ? undefined : onLeave}
       style={{ display: 'inline-block', transformStyle: 'preserve-3d',  cursor: 'default' }}
     >
       {children}
@@ -52,7 +53,8 @@ function HoverFloat({ children, intensity = 1 }) {
   )
 }
 
-export function Hero() {
+export function Hero({ ready = true }) {
+  const isMobile = useIsMobile()
   const sectionRef = useRef(null)
   const innerRef = useRef(null)
   const ghostRef = useRef(null)
@@ -82,14 +84,24 @@ export function Hero() {
   )
 
   // ── Entry animation ───────────────────────────────────
+  // Espera a `ready`: el Loader tapa el viewport, así que la entrada no debe
+  // consumirse detrás de la cortina. Hasta entonces queda el estado inicial.
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const ctx = gsap.context(() => {
-      if (reduced) {
+      const letterEls = lettersRef.current?.querySelectorAll('[data-letter]')
+
+      if (reduced || isMobile) {
         gsap.set(photoRef.current, { clipPath: 'inset(0%)' })
         return
       }
-      const letterEls = lettersRef.current?.querySelectorAll('[data-letter]')
+
+      // Estado inicial congelado mientras el loader sigue en pantalla.
+      if (letterEls?.length) {
+        gsap.set(letterEls, { yPercent: 110, opacity: 0, rotateX: -40 })
+      }
+      if (!ready) return
+
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
       if (letterEls?.length) {
@@ -119,12 +131,12 @@ export function Hero() {
       }
     }, sectionRef)
     return () => ctx.revert()
-  }, [])
+  }, [isMobile, ready])
 
   // ── Mouse parallax — elemento individual + stagger ───
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) return
+    if (reduced || isMobile) return
     const container = innerRef.current
     if (!container) return
 
@@ -146,7 +158,7 @@ export function Hero() {
 
     container.addEventListener('mousemove', onMove)
     return () => container.removeEventListener('mousemove', onMove)
-  }, [])
+  }, [isMobile])
 
   return (
     <Box
@@ -199,7 +211,7 @@ export function Hero() {
             justify="center"
             lineHeight={0.82}
           >
-            <HoverFloat intensity={0.2}>
+            <HoverFloat intensity={0.2} disabled={isMobile}>
             {words.map((w, wi) => (
               <Text
                 key={wi}
@@ -281,9 +293,11 @@ export function Hero() {
             h={{ base: '80vh', md: '86vh', lg: '92vh' }}
             objectFit="contain"
             objectPosition="bottom center"
-            sx={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+            sx={{ clipPath: isMobile ? 'inset(0%)' : 'inset(100% 0% 0% 0%)' }}
             draggable={false}
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
          </Flex>
 
@@ -295,7 +309,7 @@ export function Hero() {
           transform="translateY(-50%)"
           zIndex={15}
         >
-          <HoverFloat intensity={1.2}>
+          <HoverFloat intensity={1.2} disabled={isMobile}>
             <Text
               fontFamily="heading"
               fontSize={{ base: '60px', md: '130px' }}
@@ -308,7 +322,7 @@ export function Hero() {
           </HoverFloat>
           <Box h="1px" w={{base:"60px", md: "70px", lg: "80px"}} bg="brand.brown" mb={3} />
           <Flex direction="column" align="flex-start" >
-            <HoverFloat intensity={0.6}>
+            <HoverFloat intensity={0.6} disabled={isMobile}>
               <Text
                 fontFamily="condensed"
                 fontSize={{ base: '8px', md: 'xs' }}
@@ -320,7 +334,7 @@ export function Hero() {
                 {playerData.position}
               </Text>
             </HoverFloat>
-            <HoverFloat intensity={1.2}>
+            <HoverFloat intensity={1.2} disabled={isMobile}>
               <Text
                 fontFamily="condensed"
                 fontSize={{ base: '8px', md: 'xs' }}
@@ -334,7 +348,7 @@ export function Hero() {
             </HoverFloat>
           </Flex>
           {/* Club: escudo + nombre inline */}
-          <HoverFloat intensity={0.6}>
+          <HoverFloat intensity={0.6} disabled={isMobile}>
           <Flex align="center" gap={2} mt={{ base: 1, md: 3 }}>
             <Box
               as="img"
@@ -384,9 +398,11 @@ export function Hero() {
         </Box>
 
         {/* ── ScrollIndicator (costado izq, desktop, z=16) ── */}
-        <Box display={{ base: 'none', lg: 'block' }}>
-          <ScrollIndicator />
-        </Box>
+        {!isMobile && (
+          <Box display={{ base: 'none', lg: 'block' }}>
+            <ScrollIndicator />
+          </Box>
+        )}
 
         {/* ── Fade de unión con la sección Stats (z=20) ──
             Disuelve la base del Hero hacia el color exacto del panel de

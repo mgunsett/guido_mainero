@@ -17,7 +17,7 @@ const navLinks = [
   { label: 'Contacto', href: '#contact' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ ready = true }) {
   const navRef = useRef(null)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -28,12 +28,22 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // La entrada espera a que el Loader libere el viewport (ver App.jsx).
   useEffect(() => {
-    gsap.fromTo(navRef.current,
+    const el = navRef.current
+    if (!el) return
+
+    if (!ready) {
+      gsap.set(el, { y: -60, opacity: 0 })
+      return
+    }
+
+    const tween = gsap.fromTo(el,
       { y: -60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.5 }
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.3 }
     )
-  }, [])
+    return () => tween.kill()
+  }, [ready])
 
   // Cerrar el menú al pasar a desktop
   useEffect(() => {

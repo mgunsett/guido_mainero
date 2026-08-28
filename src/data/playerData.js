@@ -15,7 +15,7 @@ import transfermkt from '../assets/transfermkt.webp'
 
 // ── Imágenes del jugador ──────────────────────────────
 import playerImg from '../assets/perfil1.webp'
-import fondoContact from '../assets/fondoContact.svg'
+import fondoContact from '../assets/fondoContact.webp'
 
 // ── Galería ───────────────────────────────────────────
 import g1 from '../assets/gallery/gallery_1.webp'
