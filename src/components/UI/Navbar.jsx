@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const MotionBox = motion(Box)
+const MotionBox = motion.create(Box)
 
 const navLinks = [
   { label: 'Stats',    href: '#stats' },

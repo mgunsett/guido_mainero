@@ -11,7 +11,7 @@ import { useScrubReveal } from '../../hooks/useScrubReveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const MotionBox = motion(Box)
+const MotionBox = motion.create(Box)
 
 // Pulso continuo del anillo del botón play
 const pulse = keyframes`

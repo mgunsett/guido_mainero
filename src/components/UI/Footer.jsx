@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
-import { Box, Flex, Text, HStack, Link } from '@chakra-ui/react'
+import { Box, Flex, Text, HStack, Image, Link } from '@chakra-ui/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { LiaLaptopCodeSolid } from 'react-icons/lia'
+import sportfolioWeb from '../../assets/sportfolio_web.webp'
+
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -85,7 +86,7 @@ export default function Footer() {
             _hover={{ borderColor: '#e8d5a370', color: '#e8d5a380' }}
             transition="color 0.3s"
             >
-              Matias Gunsett <LiaLaptopCodeSolid style={{ marginLeft: '4px', display: 'inline-block', verticalAlign: 'middle', fontSize: '20px', color: '#E8D5A3' }} />
+             <Image src={sportfolioWeb} alt="Sportfolio Web" display="inline-block" width="60px" height="16px" mr="2px" ml="2px" pt="4px" />
             </Link>
           </Text>
       </Flex>

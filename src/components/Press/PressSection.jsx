@@ -5,7 +5,7 @@ import { FiArrowUpRight } from 'react-icons/fi'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-const MotionFlex = motion(Box)
+const MotionFlex = motion.create(Box)
 
 import { playerData } from '../../data/playerData'
 import SectionHeading from '../UI/SectionHeading'
