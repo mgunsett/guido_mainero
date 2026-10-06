@@ -30,6 +30,7 @@ gsap.registerPlugin(ScrollTrigger)
 const EASE = [0.22, 1, 0.36, 1]
 const PX = { base: 6, md: 12, lg: 20 }
 const FADE_OTHERS_MS = 300 // morph: tiempo en que se apagan los otros paneles
+const ENTER_MS = 450 // entrada de los paneles al aparecer en el viewport
 // Encuadre de las portadas: las fotos son verticales (4:5) dentro de paneles
 // apaisados, así que `cover` recorta arriba y abajo. 50% 25% privilegia la
 // parte alta de la foto (cabezas). Se puede ajustar por torneo con `coverPos`.
@@ -262,7 +263,10 @@ export function GalleryVestuario({ transition = 'morph' }) {
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const selected = tournaments.find((t) => t.id === selectedId) ?? null
-  const useMorph = transition === 'morph' && !reduced
+  // En mobile se entra derecho al carrusel: la transición no llega a leerse
+  // en pantalla chica y retrasa la aparición de las fotos.
+  const instant = isMobile || reduced
+  const useMorph = transition === 'morph' && !instant
 
   // Precarga de las fotos de un torneo (al pasar el mouse o hacer foco)
   const prefetch = useCallback((t) => {
@@ -287,7 +291,7 @@ export function GalleryVestuario({ transition = 'morph' }) {
       if (choosingId) return
       prefetch(t)
 
-      if (reduced) return setSelectedId(t.id)
+      if (instant) return setSelectedId(t.id)
 
       if (useMorph) {
         // 1) se apagan los otros paneles  2) la portada viaja al carrusel
@@ -301,8 +305,7 @@ export function GalleryVestuario({ transition = 'morph' }) {
         return
       }
 
-      // Transición 'expand' (en mobile va directo, como antes)
-      if (isMobile) return setSelectedId(t.id)
+      // Transición 'expand'
       setChoosingId(t.id)
       timer.current = setTimeout(() => {
         setSelectedId(t.id)
@@ -310,7 +313,7 @@ export function GalleryVestuario({ transition = 'morph' }) {
         setHoverId(null)
       }, EXPAND_MS)
     },
-    [choosingId, reduced, useMorph, isMobile, prefetch],
+    [choosingId, instant, useMorph, prefetch],
   )
 
   const back = useCallback(() => {
@@ -333,21 +336,23 @@ export function GalleryVestuario({ transition = 'morph' }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [selected, back])
 
-  // Entrada de los paneles al hacer scroll (y al volver de una galería)
+  // Entrada de los paneles al hacer scroll (y al volver de una galería).
+  // Arranca antes (top 92%) y dura poco: la idea es que los paneles ya estén
+  // puestos cuando la sección termina de entrar, no acompañar todo el scroll.
   useEffect(() => {
     if (selected || reduced || !panelsRef.current) return undefined
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '[data-panel]',
-        { y: 80, clipPath: 'inset(100% 0% 0% 0%)' },
+        { y: 36, clipPath: 'inset(100% 0% 0% 0%)' },
         {
           y: 0,
           clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 1,
-          stagger: 0.12,
-          ease: 'power3.out',
+          duration: ENTER_MS / 1000,
+          stagger: 0.06,
+          ease: 'power2.out',
           clearProps: 'transform,clipPath',
-          scrollTrigger: { trigger: panelsRef.current, start: 'top 80%', once: true },
+          scrollTrigger: { trigger: panelsRef.current, start: 'top 92%', once: true },
         },
       )
     }, panelsRef)
@@ -377,8 +382,8 @@ export function GalleryVestuario({ transition = 'morph' }) {
             key="select"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={morph ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, transition: { duration: 0.3 } }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, transition: { duration: morph || instant ? 0 : 0.3 } }}
+            transition={{ duration: instant ? 0 : 0.25 }}
             style={{ position: 'relative', zIndex: 5 }}
           >
             <Flex
@@ -411,10 +416,10 @@ export function GalleryVestuario({ transition = 'morph' }) {
           // ── Vista 2: galería del torneo ──
           <motion.div
             key="gallery"
-            initial={morph ? { opacity: 1 } : { opacity: 0, scale: reduced ? 1 : 0.96 }}
+            initial={morph || instant ? { opacity: 1 } : { opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
+            transition={{ duration: instant ? 0 : 0.5, ease: EASE }}
             style={{ position: 'relative', zIndex: 5 }}
           >
             <Flex
