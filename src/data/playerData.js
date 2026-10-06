@@ -17,23 +17,9 @@ import transfermkt from '../assets/transfermkt.webp'
 import playerImg from '../assets/perfil1.webp'
 import fondoContact from '../assets/fondoContact.webp'
 
-// ── Galería ───────────────────────────────────────────
-import g1 from '../assets/gallery/gallery_1.webp'
-import g2 from '../assets/gallery/gallery_2.webp'
-import g3 from '../assets/gallery/gallery_3.webp'
-import g4 from '../assets/gallery/gallery_4.webp'
-import g5 from '../assets/gallery/gallery_5.webp'
-import g6 from '../assets/gallery/gallery_6.webp'
-import g7 from '../assets/gallery/gallery_7.webp'
-import g8 from '../assets/gallery/gallery_8.webp'
-import g9 from '../assets/gallery/gallery_9.webp'
-import g10 from '../assets/gallery/gallery_10.webp'
-import g11 from '../assets/gallery/gallery_11.webp'
-import g12 from '../assets/gallery/gallery_12.webp'
-import g13 from '../assets/gallery/gallery_13.webp'
-import g14 from '../assets/gallery/gallery_14.webp'
-import g15 from '../assets/gallery/gallery_15.webp'
-import g16 from '../assets/gallery/gallery_16.webp'
+// ── Portada del video ─────────────────────────────────
+import videoCover from '../assets/gallery-torneos/Liga Profesional/04-encarando-por-la-derecha.webp'
+
 
 // ── Logos de clubes ───────────────────────────────────
 import platense from '../assets/escudos/escudo_platense.webp'
@@ -140,8 +126,7 @@ export const playerData = {
       id: 'v1',
       title: 'Highlights 2026',
       duration: '0:46',
-      thumbnail: g2,
-      cover: g7,
+      cover: videoCover,
       category: 'Highlights',
     },
   ],
@@ -171,105 +156,6 @@ export const playerData = {
     },
   ],
 
-  // Galería
-  gallery: [
-    {
-      id: 'ph12',
-      src: g12,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph13',
-      src: g13,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    { 
-      id: 'ph14',
-      src: g14,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph15',
-      src: g15,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph16',
-      src: g16,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph1',
-      src: g1,
-      alt: 'Guido Mainero en acción',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph2',
-      src: g2,
-      alt: 'Guido Mainero celebrando',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph3',
-      src: g3,
-      alt: 'Guido Mainero retrato',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph4',
-      src: g4,
-      alt: 'Guido Mainero entrenamiento',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph5',
-      src: g5,
-      alt: 'Guido Mainero',
-      aspect: '4/4',
-    },
-    {
-      id: 'ph6',
-      src: g6,
-      alt: 'Guido Mainero',
-      aspect: '2/4',
-    },
-    {
-      id: 'ph7',
-      src: g7,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph8',
-      src: g8,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph9',
-      src: g9,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph10',
-      src: g10,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    },
-    {
-      id: 'ph11',
-      src: g11,
-      alt: 'Guido Mainero',
-      aspect: '3/4',
-    }
-  ],
 
   // Redes sociales
   socialMedia: [

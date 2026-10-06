@@ -8,7 +8,7 @@ import Footer from './components/UI/Footer'
 import Hero from './components/Hero/Hero'
 import StatsSection from './components/Stats/StatsSection'
 import VideosSection from './components/Videos/VideosSection'
-import GallerySection from './components/Gallery/GallerySection'
+import { GalleryVestuario as GallerySection } from './components/GalleryTournaments'
 import PressSection from './components/Press/PressSection'
 import ContactSection from './components/Contact/ContactSection'
 
