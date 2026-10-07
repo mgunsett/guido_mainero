@@ -77,18 +77,20 @@ export default function Footer() {
           © 2026 Guido Mainero · Todos los derechos reservados
         </Text>
 
-        <Text fontSize="12px" color="rgba(255,255,255,0.3)" letterSpacing="0.05em">
-            Desarrollo Web -{' '} 
+        <Flex direction="column" fontSize="12px" color="rgba(255,255,255,0.3)" letterSpacing="0.05em"
+          textTransform="uppercase" fontFamily="'Barlow Condensed', sans-serif" >
+            Desarrollo Web
+            <Box width="95px" height="1px" color="rgba(255,255,255,0.3)"/>
             <Link 
-            href="https://matiasgunsett.netlify.app/" 
+            href="https://matiasgunsett.netlify.app/sportfolio" 
             isExternal 
             color="#2D5A47" 
             _hover={{ borderColor: '#e8d5a370', color: '#e8d5a380' }}
             transition="color 0.3s"
             >
-             <Image src={sportfolioWeb} alt="Sportfolio Web" display="inline-block" width="60px" height="16px" mr="2px" ml="2px" pt="4px" />
+             <Image src={sportfolioWeb} alt="Sportfolio Web" display="block" width="85px" height="20px" mr="2px" ml="2px" pt="4px" />
             </Link>
-          </Text>
+        </Flex>
       </Flex>
     </Box>
   )

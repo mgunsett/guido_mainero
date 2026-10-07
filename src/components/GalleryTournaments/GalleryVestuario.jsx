@@ -58,7 +58,7 @@ function TournamentPanel({ t, grow, faded, isHot, isChosen, contentHidden, onSel
       flexGrow={grow}
       flexShrink={1}
       opacity={faded ? 0 : 1}
-      transition={`flex-grow 0.8s cubic-bezier(.22,1,.36,1), all 0.95s ease`}
+      transition={`flex-grow 0.8s cubic-bezier(.22,1,.36,1), all 0.6s ease`}
       sx={{ containerType: 'inline-size', isolation: 'isolate' }}
       _focusVisible={{ outline: '1px solid', outlineColor: 'brand.brown', outlineOffset: '3px' }}
     >
