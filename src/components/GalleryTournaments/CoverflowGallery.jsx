@@ -49,7 +49,7 @@ function ArrowBtn({ direction, onClick }) {
 }
 
 // ─── SLIDE ────────────────────────────────────────────────────────
-function Slide({ item, category, pos, onClick, isMobile, hidden }) {
+function Slide({ item, pos, onClick, isMobile, hidden }) {
   const isCenter = pos === 0
   const isVisible = Math.abs(pos) <= 1
   const xVal = pos === 0 ? '0%' : pos < 0 ? `-${SIDE_X}` : SIDE_X
@@ -112,18 +112,6 @@ function Slide({ item, category, pos, onClick, isMobile, hidden }) {
           pointerEvents: 'none',
         }}
       />
-
-      {isCenter && (
-        <Box position="absolute" left={{ base: 4, md: 6 }} right={{ base: 4, md: 6 }} bottom={{ base: 4, md: 6 }}>
-          <Box w="28px" h="1px" bg="brand.brown" mb={2} />
-          <Text fontFamily="condensed" fontSize="9px" fontWeight="700" letterSpacing="0.28em" textTransform="uppercase" color="brand.brown" mb={1}>
-            {category}
-          </Text>
-          <Text fontFamily="condensed" fontSize={{ base: '13px', md: '16px' }} fontWeight="600" letterSpacing="0.05em" color="white" lineHeight="1.3">
-            {item.caption}
-          </Text>
-        </Box>
-      )}
     </motion.div>
   )
 }
@@ -373,7 +361,6 @@ export function CoverflowGallery({ images, category, onIndexChange, keyboard = t
             <Slide
               key={img.id ?? i}
               item={img}
-              category={category}
               pos={pos}
               isMobile={isMobile}
               hidden={intro}
