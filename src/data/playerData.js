@@ -55,19 +55,19 @@ export const playerData = {
     { label: 'Pase', value: 88 },
     { label: 'Visión', value: 91 },
     { label: 'Regate', value: 85 },
-    { label: 'Tiro', value: 79 },
+    { label: 'Tiro', value: 90 },
     { label: 'Resistencia', value: 89 },
     { label: 'Velocidad', value: 87 },
   ],
 
   // Tarjetas de temporada
   seasonStats: [
-    { label: 'Partidos', value: '68' },
-    { label: 'Goles', value: '7' },
-    { label: 'Asistencias', value: '10' },
-    { label: 'Minutos', value: '5209' },
-    { label: 'Pases', value: '1071' },
-    { label: 'Valoración', value: '7.9' },
+    { label: 'Partidos', value: '77' },
+    { label: 'Goles', value: '9' },
+    { label: 'Asistencias', value: '14' },
+    { label: 'Minutos', value: '5832' },
+    { label: 'Pases', value: '1225' },
+    { label: 'Valoración', value: '8.9' },
   ],
 
   // Timeline de clubes
