@@ -15,6 +15,8 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import { playerData } from '../../data/playerData'
+import useSeasonStats from '../../hooks/useSeasonStats'
+import { seasonTiles, seasonTitle } from '../../lib/seasonTiles'
 import SectionHeading from '../UI/SectionHeading'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -433,6 +435,10 @@ function ClubsTimeline() {
 }
 
 export function StatsSection() {
+  // Temporada en curso desde API-Football; sin datos, los valores fijos.
+  const season = useSeasonStats()
+  const seasonItems = season ? seasonTiles(season) : playerData.seasonStats
+
   return (
     <Box
       as="section"
@@ -554,10 +560,10 @@ export function StatsSection() {
               color="whiteAlpha.600"
               mb={5}
             >
-              Temporada '25 / '26
+              {seasonTitle(season, "Temporada '25 / '26")}
             </Text>
             <SimpleGrid columns={2} spacing={4}>
-              {playerData.seasonStats.map((s, i) => (
+              {seasonItems.map((s, i) => (
                 <SeasonCard key={i} label={s.label} value={s.value} />
               ))}
             </SimpleGrid>
